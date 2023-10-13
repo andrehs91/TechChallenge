@@ -14,31 +14,31 @@ public class EFRepositorio<T> : IRepositorio<T> where T : Entidade
         _dbSet = _context.Set<T>();
     }
 
-    public void Create(T entity)
+    public void Criar(T entity)
     {
         _dbSet.Add(entity);
         _context.SaveChanges();
     }
 
-    public IList<T> ReadAll()
+    public IList<T> BuscarTodas()
     {
         return _dbSet.ToList();
     }
 
-    public T? ReadById(int id)
+    public T? BuscarPorId(int id)
     {
         return _dbSet.FirstOrDefault(t => t.Id == id);
     }
 
-    public void Update(T entity)
+    public void Editar(T entity)
     {
         _dbSet.Update(entity);
         _context.SaveChanges();
     }
 
-    public void Delete(int id)
+    public void Apagar(int id)
     {
-        var entity = ReadById(id);
+        var entity = BuscarPorId(id);
         if (entity != null)
         {
             _dbSet.Remove(entity);

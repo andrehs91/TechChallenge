@@ -2,9 +2,9 @@
 
 public interface IRepositorio<T> where T : Entidade
 {
-    void Create(T entity);
-    IList<T> ReadAll();
-    T? ReadById(int id);
-    void Update(T entity);
-    void Delete(int id);
+    void Criar(T entity);
+    IList<T> BuscarTodas();
+    T? BuscarPorId(int id);
+    void Editar(T entity);
+    void Apagar(int id);
 }

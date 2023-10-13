@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 namespace Aplicacao.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class LoginController : ControllerBase
+[Route("/[controller]")]
+public class AutenticarController : ControllerBase
 {
     private readonly IUsuarioRepositorio _usuarioRepositorio;
     private readonly ITokenService _tokenService;
 
-    public LoginController(IUsuarioRepositorio usuarioRepositorio, ITokenService tokenService)
+    public AutenticarController(IUsuarioRepositorio usuarioRepositorio, ITokenService tokenService)
     {
         _usuarioRepositorio = usuarioRepositorio;
         _tokenService = tokenService;
@@ -21,16 +21,15 @@ public class LoginController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Gestor")]
-    [Authorize]
     public IActionResult Test()
     {
         return Ok("Testing...");
     }
 
     [HttpPost]
-    public IActionResult Authenticate([FromBody] LoginDTO loginDTO)
+    public IActionResult Authenticate([FromBody] AutenticarDTO AutenticarDTO)
     {
-        var usuario = _usuarioRepositorio.BuscarPorCodigoESenha(loginDTO.Matricula, loginDTO.Senha);
+        var usuario = _usuarioRepositorio.BuscarPorCodigoESenha(AutenticarDTO.Matricula, AutenticarDTO.Senha);
 
         if (usuario == null) return NotFound(new { mensagem = "Matrícula e/ou senha inválidos." });
 

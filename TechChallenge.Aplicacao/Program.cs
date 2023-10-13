@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 using TechChallenge.Aplicacao.Services;
 using TechChallenge.Dominio.Usuario;
 using TechChallenge.Infraestrutura.Repositorios;
@@ -32,7 +33,7 @@ builder.Services.AddAuthentication(o =>
         ValidateAudience = false
     };
 });
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
 {

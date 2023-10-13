@@ -9,7 +9,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
     {
         if (!_context.Usuarios.Any())
         {
-            Create(new Usuario
+            Criar(new Usuario
             {
                 Matricula = "c1111",
                 Nome = "Pedro",
@@ -18,7 +18,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
                 Senha = "senha",
                 Role = Roles.Gestor
             });
-            Create(new Usuario
+            Criar(new Usuario
             {
                 Matricula = "c2222",
                 Nome = "Paulo",
@@ -27,7 +27,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
                 Senha = "senha",
                 Role = Roles.Solucionador
             });
-            Create(new Usuario
+            Criar(new Usuario
             {
                 Matricula = "c3333",
                 Nome = "João",

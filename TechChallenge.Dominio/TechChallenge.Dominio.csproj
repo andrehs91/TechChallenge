@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Atividade\" />
     <Folder Include="Demanda\" />
     <Folder Include="Historico\" />
   </ItemGroup>
