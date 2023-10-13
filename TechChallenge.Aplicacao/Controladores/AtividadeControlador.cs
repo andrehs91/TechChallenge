@@ -4,22 +4,22 @@ using TechChallenge.Aplicacao.DTO;
 using TechChallenge.Dominio.Atividade;
 using TechChallenge.Infraestrutura.Repositorios;
 
-namespace TechChallenge.Aplicacao.Controllers;
+namespace TechChallenge.Aplicacao.Controladores;
 
 [ApiController]
 [Route("/[controller]")]
-public class AtividadeController : ControllerBase
+public class AtividadeControlador : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly string NullEntityDetail = "Entity set 'ApplicationDbContext.Atividade' is null.";
 
-    public AtividadeController(ApplicationDbContext context)
+    public AtividadeControlador(ApplicationDbContext context)
     {
         _context = context;
     }
 
     [HttpGet]
-    //[ProducesResponseType(typeof(IEnumerable<AtividadeDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<AtividadeDTO>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<AtividadeDTO>>> BuscarAtividades()
     {
         if (_context.Atividades == null) return Problem(NullEntityDetail);
@@ -28,6 +28,7 @@ public class AtividadeController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status200OK)]
     public async Task<ActionResult<AtividadeDTO>> BuscarAtividade(long id)
     {
         if (_context.Atividades == null) return Problem(NullEntityDetail);
@@ -38,6 +39,7 @@ public class AtividadeController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status200OK)]
     public async Task<ActionResult<AtividadeDTO>> CriarAtividade(AtividadeDTO atividadeDTO)
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
@@ -53,6 +55,7 @@ public class AtividadeController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<IActionResult> EditarAtividade(long id, AtividadeDTO atividadeDTO)
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
@@ -77,6 +80,7 @@ public class AtividadeController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<IActionResult> ApagarAtividade(long id)
     {
         if (_context.Atividades == null) return Problem(NullEntityDetail);
