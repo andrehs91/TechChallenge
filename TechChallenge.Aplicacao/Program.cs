@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using TechChallenge.Aplicacao.Comandos;
 using TechChallenge.Aplicacao.Servicos;
 using TechChallenge.Dominio.Usuario;
 using TechChallenge.Infraestrutura.Repositorios;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("DB_TODOLIST"));
 builder.Services.AddScoped<ITokenServico, TokenServico>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+builder.Services.AddScoped<AtividadeComandos>();
 builder.Services.AddAuthentication(o =>
 {
     o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

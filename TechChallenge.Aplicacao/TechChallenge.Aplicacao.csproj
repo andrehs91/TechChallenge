@@ -24,8 +24,4 @@
     <ProjectReference Include="..\TechChallenge.Infraestrutura\TechChallenge.Infraestrutura.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Comandos\" />
-  </ItemGroup>
-
 </Project>
