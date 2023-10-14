@@ -1,0 +1,1 @@
+- Alterar origem do campo CodigoDoDepartamentoResponsavel: Não solicitar através do JSON de entrar, mas capturar dado do usuário autenticado.

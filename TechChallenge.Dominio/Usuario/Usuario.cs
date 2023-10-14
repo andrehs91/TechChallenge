@@ -6,18 +6,18 @@ public class Usuario : Entidade
 {
     public string Matricula { get; set; }
     public string Nome { get; set; }
-    public string CodigoUnidade { get; set; }
-    public string NomeUnidade { get; set; }
+    public string CodigoDoDepartamento { get; set; }
+    public string NomeDoDepartamento { get; set; }
     public string? Senha { get; set; }
     public Roles Role { get; set; }
 
     public Usuario() { }
 
-    public Usuario(string matricula, string nome, string codigoUnidade, string nomeUnidade)
+    public Usuario(string matricula, string nome, string codigoDoDepartamento, string nomeDoDepartamento)
     {
         Matricula = matricula;
         Nome = nome;
-        CodigoUnidade = codigoUnidade;
-        NomeUnidade = nomeUnidade;
+        CodigoDoDepartamento = codigoDoDepartamento;
+        NomeDoDepartamento = nomeDoDepartamento;
     }
 }

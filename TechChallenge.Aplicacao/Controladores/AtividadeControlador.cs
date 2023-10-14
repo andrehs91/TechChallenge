@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TechChallenge.Aplicacao.Comandos;
 using TechChallenge.Aplicacao.DTO;
+using TechChallenge.Dominio.Excecoes;
+using TechChallenge.Dominio.Usuario;
 
 namespace TechChallenge.Aplicacao.Controladores;
 
 [ApiController]
-[Route("/[controller]")]
+[Route("/Atividade")]
 public class AtividadeControlador : ControllerBase
 {
     private readonly AtividadeComandos _comandos;
@@ -16,53 +20,97 @@ public class AtividadeControlador : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     [ProducesResponseType(typeof(IEnumerable<AtividadeDTO>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AtividadeDTO>>> BuscarAtividades()
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public ActionResult<IList<AtividadeDTO>> BuscarAtividades()
     {
-        return Ok(await _comandos.BuscarAtividades());
+        return Ok(_comandos.BuscarAtividades());
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status404NotFound)] // CORRIGIR TIPO RETORNADO
-    public async Task<ActionResult<AtividadeDTO>> BuscarAtividade(long id)
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult<AtividadeDTO> BuscarAtividade(int id)
     {
-        return await _comandos.BuscarAtividade(id) is AtividadeDTO atividadeDTO
+        return _comandos.BuscarAtividade(id) is AtividadeDTO atividadeDTO
             ? Ok(atividadeDTO)
             : NotFound();
     }
 
     [HttpPost]
+    [Authorize(Roles = "Gestor")]
     [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status400BadRequest)] // CORRIGIR TIPO RETORNADO
-    public async Task<ActionResult<AtividadeDTO>> CriarAtividade(AtividadeDTO atividadeDTO)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public ActionResult<AtividadeDTO> CriarAtividade(AtividadeDTO atividadeDTO)
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
 
-        var resposta = await _comandos.CriarAtividade(atividadeDTO);
-        return CreatedAtAction(nameof(BuscarAtividade), new { id = resposta.Item1 }, resposta.Item2);
+        try
+        {
+            var resposta = _comandos.CriarAtividade(ObterDadosDoUsuario(), atividadeDTO);
+            return CreatedAtAction(nameof(BuscarAtividade), new { id = resposta.Item1 }, resposta.Item2);
+        }
+        catch (UsuarioNaoAutorizadoExcecao)
+        {
+            return Forbid();
+        }
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Gestor")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status400BadRequest)] // CORRIGIR TIPO RETORNADO
-    [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status404NotFound)] // CORRIGIR TIPO RETORNADO
-    public async Task<IActionResult> EditarAtividade(long id, AtividadeDTO atividadeDTO)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult EditarAtividade(int id, AtividadeDTO atividadeDTO)
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
 
-        return await _comandos.EditarAtividade(id, atividadeDTO)
-            ? NoContent()
-            : NotFound();
+        try
+        {
+            return _comandos.EditarAtividade(ObterDadosDoUsuario(), id, atividadeDTO)
+                ? NoContent()
+                : NotFound();
+        }
+        catch (UsuarioNaoAutorizadoExcecao)
+        {
+            return Forbid();
+        }
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Gestor")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status404NotFound)] // CORRIGIR TIPO RETORNADO
-    public async Task<IActionResult> ApagarAtividade(long id)
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult ApagarAtividade(int id)
     {
-        return await _comandos.ApagarAtividade(id)
-            ? NoContent()
-            : NotFound();
+        try
+        {
+            return _comandos.ApagarAtividade(ObterDadosDoUsuario(), id)
+                ? NoContent()
+                : NotFound();
+        }
+        catch (UsuarioNaoAutorizadoExcecao)
+        {
+            return Forbid();
+        }
+    }
+
+    private PapelEDepartamentoDoUsuario ObterDadosDoUsuario()
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        return new PapelEDepartamentoDoUsuario()
+        {
+            Papel = claimsIdentity!.Claims.Where(c => c.Type == ClaimTypes.Role).Order().First().Value,
+            CodigoDoDepartamento = claimsIdentity!.FindFirst("CodigoDoDepartamento")!.Value
+        };
     }
 }

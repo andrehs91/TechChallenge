@@ -1,68 +1,78 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TechChallenge.Aplicacao.DTO;
+﻿using TechChallenge.Aplicacao.DTO;
 using TechChallenge.Dominio.Atividade;
-using TechChallenge.Infraestrutura.Repositorios;
+using TechChallenge.Dominio.Excecoes;
+using TechChallenge.Dominio.Usuario;
 
 namespace TechChallenge.Aplicacao.Comandos;
 
 public class AtividadeComandos
 {
-    private readonly ApplicationDbContext _context;
-    private readonly ILogger<AtividadeComandos> _logger;
+    private readonly IAtividadeRepositorio _repositorio;
+    private readonly AtividadeAgragacao _agregacao;
 
-    public AtividadeComandos(ApplicationDbContext context, ILogger<AtividadeComandos> logger)
+    public AtividadeComandos(IAtividadeRepositorio repositorio, AtividadeAgragacao agregacao)
     {
-        _context = context;
-        _logger = logger;
+        _repositorio = repositorio;
+        _agregacao = agregacao;
     }
 
-    public async Task<Tuple<long, AtividadeDTO>> CriarAtividade(AtividadeDTO atividadeDTO)
+    public Tuple<int, AtividadeDTO> CriarAtividade(PapelEDepartamentoDoUsuario dadosDoUsuario, AtividadeDTO atividadeDTO)
     {
         Atividade atividade = AtividadeDTO.DTOParaEntidade(atividadeDTO);
-        _context.Atividades.Add(atividade);
-        await _context.SaveChangesAsync();
+        
+        if (!_agregacao.UsuarioPodeCriarAtividade(dadosDoUsuario, atividade))
+            throw new UsuarioNaoAutorizadoExcecao();
+        
+        _repositorio.CriarAtividade(atividade);
         return Tuple.Create(atividade.Id, AtividadeDTO.EntidadeParaDTO(atividade));
     }
 
-    public async Task<IEnumerable<AtividadeDTO>> BuscarAtividades()
+    public IList<AtividadeDTO> BuscarAtividades()
     {
-        return await _context.Atividades.Select(atividade => AtividadeDTO.EntidadeParaDTO(atividade)).ToListAsync();
+        return _repositorio.BuscarAtividades()
+            .Select(AtividadeDTO.EntidadeParaDTO)
+            .ToList();
     }
 
-    public async Task<AtividadeDTO?> BuscarAtividade(long id)
+    public AtividadeDTO? BuscarAtividade(int id)
     {
-        return await _context.Atividades.FindAsync(id) is Atividade atividade
+        return _repositorio.BuscarAtividade(id) is Atividade atividade
             ? AtividadeDTO.EntidadeParaDTO(atividade)
             : null;
     }
 
-    public async Task<bool> EditarAtividade(long id, AtividadeDTO atividadeDTO)
+    public bool EditarAtividade(PapelEDepartamentoDoUsuario dadosDoUsuario, int id, AtividadeDTO atividadeDTO)
     {
-        var atividade = await _context.Atividades.FindAsync(id);
+        var atividade = _repositorio.BuscarAtividade(id);
 
         if (atividade is null) return false;
+
+        if (!_agregacao.UsuarioPodeEditarAtividade(dadosDoUsuario, atividade))
+            throw new UsuarioNaoAutorizadoExcecao();
 
         atividade.Nome = atividadeDTO.Nome;
         atividade.Descricao = atividadeDTO.Descricao;
         atividade.EstahAtiva = atividadeDTO.EstahAtiva;
-        atividade.UnidadeResponsavel = atividadeDTO.UnidadeResponsavel;
+        atividade.CodigoDoDepartamentoResponsavel = atividadeDTO.CodigoDoDepartamentoResponsavel;
         atividade.TipoDeDistribuicao = atividadeDTO.TipoDeDistribuicao;
         atividade.Prioridade = atividadeDTO.Prioridade;
         atividade.ContagemDePrazo = atividadeDTO.ContagemDePrazo;
         atividade.PrazoEstimado = atividadeDTO.PrazoEstimado;
-        await _context.SaveChangesAsync();
+        _repositorio.EditarAtividade(atividade);
 
         return true;
     }
 
-    public async Task<bool> ApagarAtividade(long id)
+    public bool ApagarAtividade(PapelEDepartamentoDoUsuario dadosDoUsuario, int id)
     {
-        var atividade = await _context.Atividades.FindAsync(id);
+        var atividade = _repositorio.BuscarAtividade(id);
 
         if (atividade is null) return false;
 
-        _context.Atividades.Remove(atividade);
-        await _context.SaveChangesAsync();
+        if (!_agregacao.UsuarioPodeApagarAtividade(dadosDoUsuario, atividade))
+            throw new UsuarioNaoAutorizadoExcecao();
+
+        _repositorio.ApagarAtividade(atividade);
 
         return true;
     }

@@ -3,11 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.Aplicacao", "TechChallenge.Aplicacao\TechChallenge.Aplicacao.csproj", "{1943E216-EA17-4D98-8FF2-FC135C4C9998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Aplicacao", "TechChallenge.Aplicacao\TechChallenge.Aplicacao.csproj", "{1943E216-EA17-4D98-8FF2-FC135C4C9998}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.Dominio", "TechChallenge.Dominio\TechChallenge.Dominio.csproj", "{D1EC3033-1CBD-4A7C-9766-DF64983D5EDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Dominio", "TechChallenge.Dominio\TechChallenge.Dominio.csproj", "{D1EC3033-1CBD-4A7C-9766-DF64983D5EDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenge.Infraestrutura", "TechChallenge.Infraestrutura\TechChallenge.Infraestrutura.csproj", "{5066A6F4-C90B-4220-8893-385689ECB167}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Infraestrutura", "TechChallenge.Infraestrutura\TechChallenge.Infraestrutura.csproj", "{5066A6F4-C90B-4220-8893-385689ECB167}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{096D1E23-253E-4FDA-8A42-36CD00273277}"
+	ProjectSection(SolutionItems) = preProject
+		WIP.txt = WIP.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

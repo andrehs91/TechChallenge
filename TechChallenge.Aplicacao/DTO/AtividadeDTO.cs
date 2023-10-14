@@ -9,7 +9,7 @@ public class AtividadeDTO
     public string Nome { get; set; }
     public string Descricao { get; set; }
     public bool EstahAtiva { get; set; }
-    public string UnidadeResponsavel { get; set; }
+    public string CodigoDoDepartamentoResponsavel { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))] public TiposDeDistribuicao TipoDeDistribuicao { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))] public Prioridades Prioridade { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))] public ContagensDePrazo ContagemDePrazo { get; set; }
@@ -21,7 +21,7 @@ public class AtividadeDTO
             Nome = atividade.Nome,
             Descricao = atividade.Descricao,
             EstahAtiva = atividade.EstahAtiva,
-            UnidadeResponsavel = atividade.UnidadeResponsavel,
+            CodigoDoDepartamentoResponsavel = atividade.CodigoDoDepartamentoResponsavel,
             TipoDeDistribuicao = atividade.TipoDeDistribuicao,
             Prioridade = atividade.Prioridade,
             ContagemDePrazo = atividade.ContagemDePrazo,
@@ -36,7 +36,7 @@ public class AtividadeDTO
             Nome = atividadeDTO.Nome,
             Descricao = atividadeDTO.Descricao,
             EstahAtiva = atividadeDTO.EstahAtiva,
-            UnidadeResponsavel = atividadeDTO.UnidadeResponsavel,
+            CodigoDoDepartamentoResponsavel = atividadeDTO.CodigoDoDepartamentoResponsavel,
             TipoDeDistribuicao = atividadeDTO.TipoDeDistribuicao,
             Prioridade = atividadeDTO.Prioridade,
             ContagemDePrazo = atividadeDTO.ContagemDePrazo,

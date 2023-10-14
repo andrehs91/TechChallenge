@@ -6,14 +6,17 @@ using System.Text;
 using System.Text.Json.Serialization;
 using TechChallenge.Aplicacao.Comandos;
 using TechChallenge.Aplicacao.Servicos;
+using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Usuario;
 using TechChallenge.Infraestrutura.Repositorios;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("DB_TODOLIST"));
+builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("DATABASE"));
 builder.Services.AddScoped<ITokenServico, TokenServico>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+builder.Services.AddScoped<IAtividadeRepositorio, AtividadeRepositorio>();
+builder.Services.AddScoped<AtividadeAgragacao>();
 builder.Services.AddScoped<AtividadeComandos>();
 builder.Services.AddAuthentication(o =>
 {

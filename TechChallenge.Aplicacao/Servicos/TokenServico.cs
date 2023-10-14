@@ -23,8 +23,9 @@ public class TokenServico : ITokenServico
             new Claim(ClaimTypes.Role, usuario.Role.ToString()),
             new Claim("Matricula", usuario.Matricula),
             new Claim("Nome", usuario.Nome),
-            new Claim("CodigoUnidade", usuario.CodigoUnidade),
-            new Claim("NomeUnidade", usuario.NomeUnidade)
+            new Claim("CodigoDoDepartamento", usuario.CodigoDoDepartamento),
+            new Claim("NomeDoDepartamento", usuario.NomeDoDepartamento),
+            new Claim("Papel", usuario.Role.ToString())
         };
         //foreach (var Role in usuario.Roles)
         //{
