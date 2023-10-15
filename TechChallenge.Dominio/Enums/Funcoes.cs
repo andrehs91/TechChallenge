@@ -1,6 +1,6 @@
 ﻿namespace TechChallenge.Dominio.Enums;
 
-public enum Roles
+public enum Funcoes
 {
     Gestor,
     Solucionador,

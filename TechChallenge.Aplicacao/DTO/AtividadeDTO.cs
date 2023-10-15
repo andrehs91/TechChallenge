@@ -6,6 +6,7 @@ namespace TechChallenge.Aplicacao.DTO;
 
 public class AtividadeDTO
 {
+    public int Id { get; set; }
     public string Nome { get; set; }
     public string Descricao { get; set; }
     public bool EstahAtiva { get; set; }
@@ -17,7 +18,9 @@ public class AtividadeDTO
 
     public static AtividadeDTO EntidadeParaDTO (Atividade atividade)
     {
-        return new AtividadeDTO() {
+        return new AtividadeDTO()
+        {
+            Id = atividade.Id,
             Nome = atividade.Nome,
             Descricao = atividade.Descricao,
             EstahAtiva = atividade.EstahAtiva,

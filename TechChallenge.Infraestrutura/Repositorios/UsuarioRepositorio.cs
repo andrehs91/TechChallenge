@@ -16,7 +16,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
                 CodigoDoDepartamento = "10",
                 NomeDoDepartamento = "Financeiro",
                 Senha = "senha",
-                Role = Roles.Gestor
+                Funcao = Funcoes.Gestor
             });
             Criar(new Usuario
             {
@@ -25,7 +25,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
                 CodigoDoDepartamento = "20",
                 NomeDoDepartamento = "Suporte",
                 Senha = "senha",
-                Role = Roles.Solucionador
+                Funcao = Funcoes.Solucionador
             });
             Criar(new Usuario
             {
@@ -34,7 +34,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
                 CodigoDoDepartamento = "30",
                 NomeDoDepartamento = "Desenvolvimento",
                 Senha = "senha",
-                Role = Roles.Solicitante
+                Funcao = Funcoes.Solicitante
             });
         }
     }

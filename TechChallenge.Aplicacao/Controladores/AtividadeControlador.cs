@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TechChallenge.Aplicacao.Comandos;
 using TechChallenge.Aplicacao.DTO;
+using TechChallenge.Dominio.Atividade;
+using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Excecoes;
 using TechChallenge.Dominio.Usuario;
 
 namespace TechChallenge.Aplicacao.Controladores;
 
 [ApiController]
-[Route("/Atividade")]
+[Route("/atividade")]
 public class AtividadeControlador : ControllerBase
 {
     private readonly AtividadeComandos _comandos;
@@ -21,11 +23,14 @@ public class AtividadeControlador : ControllerBase
 
     [HttpGet]
     [Authorize]
-    [ProducesResponseType(typeof(IEnumerable<AtividadeDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<AtividadeDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<IList<AtividadeDTO>> BuscarAtividades()
     {
-        return Ok(_comandos.BuscarAtividades());
+        var listaDeAtividadesDTO = _comandos.BuscarAtividades()
+            .Select(AtividadeDTO.EntidadeParaDTO)
+            .ToList();
+        return Ok(listaDeAtividadesDTO);
     }
 
     [HttpGet("{id}")]
@@ -35,8 +40,8 @@ public class AtividadeControlador : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<AtividadeDTO> BuscarAtividade(int id)
     {
-        return _comandos.BuscarAtividade(id) is AtividadeDTO atividadeDTO
-            ? Ok(atividadeDTO)
+        return _comandos.BuscarAtividade(id) is Atividade atividade
+            ? Ok(AtividadeDTO.EntidadeParaDTO(atividade))
             : NotFound();
     }
 
@@ -46,13 +51,16 @@ public class AtividadeControlador : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public ActionResult<AtividadeDTO> CriarAtividade(AtividadeDTO atividadeDTO)
+    public ActionResult<AtividadeDTO> CriarAtividade(CriarAtividadeDTO criarAtividadeDTO)
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
 
+        var dadosDoUsuario = ObterUsuario();
+        var atividadeDTO = criarAtividadeDTO.ConverterParaAtividadeDTO(dadosDoUsuario.CodigoDoDepartamento);
+
         try
         {
-            var resposta = _comandos.CriarAtividade(ObterDadosDoUsuario(), atividadeDTO);
+            var resposta = _comandos.CriarAtividade(dadosDoUsuario, atividadeDTO);
             return CreatedAtAction(nameof(BuscarAtividade), new { id = resposta.Item1 }, resposta.Item2);
         }
         catch (UsuarioNaoAutorizadoExcecao)
@@ -68,13 +76,16 @@ public class AtividadeControlador : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult EditarAtividade(int id, AtividadeDTO atividadeDTO)
+    public IActionResult EditarAtividade(int id, EditarAtividadeDTO editarAtividadeDTO)
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
 
+        var dadosDoUsuario = ObterUsuario();
+        var atividadeDTO = editarAtividadeDTO.ConverterParaAtividadeDTO(id, dadosDoUsuario.CodigoDoDepartamento);
+
         try
         {
-            return _comandos.EditarAtividade(ObterDadosDoUsuario(), id, atividadeDTO)
+            return _comandos.EditarAtividade(dadosDoUsuario, atividadeDTO)
                 ? NoContent()
                 : NotFound();
         }
@@ -94,7 +105,7 @@ public class AtividadeControlador : ControllerBase
     {
         try
         {
-            return _comandos.ApagarAtividade(ObterDadosDoUsuario(), id)
+            return _comandos.ApagarAtividade(ObterUsuario(), id)
                 ? NoContent()
                 : NotFound();
         }
@@ -104,13 +115,17 @@ public class AtividadeControlador : ControllerBase
         }
     }
 
-    private PapelEDepartamentoDoUsuario ObterDadosDoUsuario()
+    private Usuario ObterUsuario()
     {
         var claimsIdentity = User.Identity as ClaimsIdentity;
-        return new PapelEDepartamentoDoUsuario()
+        var funcao = claimsIdentity!.Claims.Where(c => c.Type == ClaimTypes.Role).Order().First().Value;
+        return new Usuario()
         {
-            Papel = claimsIdentity!.Claims.Where(c => c.Type == ClaimTypes.Role).Order().First().Value,
-            CodigoDoDepartamento = claimsIdentity!.FindFirst("CodigoDoDepartamento")!.Value
+            Matricula = claimsIdentity!.FindFirst("Matricula")!.Value,
+            Nome = claimsIdentity!.FindFirst("Nome")!.Value,
+            CodigoDoDepartamento = claimsIdentity!.FindFirst("CodigoDoDepartamento")!.Value,
+            NomeDoDepartamento = claimsIdentity!.FindFirst("NomeDoDepartamento")!.Value,
+            Funcao = (Funcoes)Enum.Parse(typeof(Funcoes), funcao)
         };
     }
 }

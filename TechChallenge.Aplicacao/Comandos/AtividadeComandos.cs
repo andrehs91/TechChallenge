@@ -16,38 +16,34 @@ public class AtividadeComandos
         _agregacao = agregacao;
     }
 
-    public Tuple<int, AtividadeDTO> CriarAtividade(PapelEDepartamentoDoUsuario dadosDoUsuario, AtividadeDTO atividadeDTO)
+    public Tuple<int, Atividade> CriarAtividade(Usuario usuario, AtividadeDTO atividadeDTO)
     {
         Atividade atividade = AtividadeDTO.DTOParaEntidade(atividadeDTO);
         
-        if (!_agregacao.UsuarioPodeCriarAtividade(dadosDoUsuario, atividade))
+        if (!_agregacao.UsuarioPodeCriarAtividade(usuario, atividade))
             throw new UsuarioNaoAutorizadoExcecao();
         
         _repositorio.CriarAtividade(atividade);
-        return Tuple.Create(atividade.Id, AtividadeDTO.EntidadeParaDTO(atividade));
+        return Tuple.Create(atividade.Id, atividade);
     }
 
-    public IList<AtividadeDTO> BuscarAtividades()
+    public IList<Atividade> BuscarAtividades()
     {
-        return _repositorio.BuscarAtividades()
-            .Select(AtividadeDTO.EntidadeParaDTO)
-            .ToList();
+        return _repositorio.BuscarAtividades();
     }
 
-    public AtividadeDTO? BuscarAtividade(int id)
+    public Atividade? BuscarAtividade(int id)
     {
-        return _repositorio.BuscarAtividade(id) is Atividade atividade
-            ? AtividadeDTO.EntidadeParaDTO(atividade)
-            : null;
+        return _repositorio.BuscarAtividade(id);
     }
 
-    public bool EditarAtividade(PapelEDepartamentoDoUsuario dadosDoUsuario, int id, AtividadeDTO atividadeDTO)
+    public bool EditarAtividade(Usuario usuario, AtividadeDTO atividadeDTO)
     {
-        var atividade = _repositorio.BuscarAtividade(id);
+        var atividade = _repositorio.BuscarAtividade(atividadeDTO.Id);
 
         if (atividade is null) return false;
 
-        if (!_agregacao.UsuarioPodeEditarAtividade(dadosDoUsuario, atividade))
+        if (!_agregacao.UsuarioPodeEditarAtividade(usuario, atividade))
             throw new UsuarioNaoAutorizadoExcecao();
 
         atividade.Nome = atividadeDTO.Nome;
@@ -63,13 +59,13 @@ public class AtividadeComandos
         return true;
     }
 
-    public bool ApagarAtividade(PapelEDepartamentoDoUsuario dadosDoUsuario, int id)
+    public bool ApagarAtividade(Usuario usuario, int id)
     {
         var atividade = _repositorio.BuscarAtividade(id);
 
         if (atividade is null) return false;
 
-        if (!_agregacao.UsuarioPodeApagarAtividade(dadosDoUsuario, atividade))
+        if (!_agregacao.UsuarioPodeApagarAtividade(usuario, atividade))
             throw new UsuarioNaoAutorizadoExcecao();
 
         _repositorio.ApagarAtividade(atividade);

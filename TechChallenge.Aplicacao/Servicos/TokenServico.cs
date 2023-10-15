@@ -20,12 +20,12 @@ public class TokenServico : ITokenServico
         List<Claim> claims = new()
         {
             new Claim(ClaimTypes.Name, usuario.Matricula),
-            new Claim(ClaimTypes.Role, usuario.Role.ToString()),
+            new Claim(ClaimTypes.Role, usuario.Funcao.ToString()),
             new Claim("Matricula", usuario.Matricula),
             new Claim("Nome", usuario.Nome),
             new Claim("CodigoDoDepartamento", usuario.CodigoDoDepartamento),
             new Claim("NomeDoDepartamento", usuario.NomeDoDepartamento),
-            new Claim("Papel", usuario.Role.ToString())
+            new Claim("Funcao", usuario.Funcao.ToString())
         };
         //foreach (var Role in usuario.Roles)
         //{

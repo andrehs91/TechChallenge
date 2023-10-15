@@ -9,7 +9,7 @@ public class Usuario : Entidade
     public string CodigoDoDepartamento { get; set; }
     public string NomeDoDepartamento { get; set; }
     public string? Senha { get; set; }
-    public Roles Role { get; set; }
+    public Funcoes Funcao { get; set; }
 
     public Usuario() { }
 

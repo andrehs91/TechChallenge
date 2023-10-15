@@ -2,12 +2,11 @@
 using TechChallenge.Aplicacao.Servicos;
 using TechChallenge.Dominio.Usuario;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 
 namespace TechChallenge.Aplicacao.Controladores;
 
 [ApiController]
-[Route("/[controller]")]
+[Route("/autenticar")]
 public class AutenticarControlador : ControllerBase
 {
     private readonly IUsuarioRepositorio _usuarioRepositorio;
@@ -17,13 +16,6 @@ public class AutenticarControlador : ControllerBase
     {
         _usuarioRepositorio = usuarioRepositorio;
         _tokenService = tokenService;
-    }
-
-    [HttpGet]
-    [Authorize(Roles = "Gestor")]
-    public IActionResult Test()
-    {
-        return Ok("Testing...");
     }
 
     [HttpPost]
