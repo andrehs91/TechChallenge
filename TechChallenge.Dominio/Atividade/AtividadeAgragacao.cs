@@ -7,7 +7,7 @@ public class AtividadeAgragacao
     public bool UsuarioPodeCriarAtividade(Usuario.Usuario usuario, Atividade atividade)
     {
         if (usuario.Funcao == Funcoes.Gestor &&
-            usuario.CodigoDoDepartamento == atividade.CodigoDoDepartamentoResponsavel)
+            usuario.Departamento == atividade.DepartamentoResponsavel)
             return true;
         return false;
     }
@@ -15,7 +15,7 @@ public class AtividadeAgragacao
     public bool UsuarioPodeEditarAtividade(Usuario.Usuario usuario, Atividade atividade)
     {
         if (usuario.Funcao == Funcoes.Gestor &&
-            usuario.CodigoDoDepartamento == atividade.CodigoDoDepartamentoResponsavel)
+            usuario.Departamento == atividade.DepartamentoResponsavel)
             return true;
         return false;
     }
@@ -23,7 +23,7 @@ public class AtividadeAgragacao
     public bool UsuarioPodeApagarAtividade(Usuario.Usuario usuario, Atividade atividade)
     {
         if (usuario.Funcao == Funcoes.Gestor &&
-            usuario.CodigoDoDepartamento == atividade.CodigoDoDepartamentoResponsavel)
+            usuario.Departamento == atividade.DepartamentoResponsavel)
             return true;
         return false;
     }

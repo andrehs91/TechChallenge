@@ -49,7 +49,7 @@ public class AtividadeComandos
         atividade.Nome = atividadeDTO.Nome;
         atividade.Descricao = atividadeDTO.Descricao;
         atividade.EstahAtiva = atividadeDTO.EstahAtiva;
-        atividade.CodigoDoDepartamentoResponsavel = atividadeDTO.CodigoDoDepartamentoResponsavel;
+        atividade.DepartamentoResponsavel = atividadeDTO.DepartamentoResponsavel;
         atividade.TipoDeDistribuicao = atividadeDTO.TipoDeDistribuicao;
         atividade.Prioridade = atividadeDTO.Prioridade;
         atividade.ContagemDePrazo = atividadeDTO.ContagemDePrazo;

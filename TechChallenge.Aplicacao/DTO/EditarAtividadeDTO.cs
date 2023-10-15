@@ -21,7 +21,7 @@ public class EditarAtividadeDTO
             Nome = Nome,
             Descricao = Descricao,
             EstahAtiva = EstahAtiva,
-            CodigoDoDepartamentoResponsavel = codigoDoDepartamentoResponsavel,
+            DepartamentoResponsavel = codigoDoDepartamentoResponsavel,
             TipoDeDistribuicao = TipoDeDistribuicao,
             Prioridade = Prioridade,
             ContagemDePrazo = ContagemDePrazo,

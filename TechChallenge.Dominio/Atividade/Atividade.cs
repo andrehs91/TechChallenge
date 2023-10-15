@@ -8,7 +8,7 @@ public class Atividade
     public string Nome { get; set; }
     public string Descricao { get; set; }
     public bool EstahAtiva { get; set; }
-    public string CodigoDoDepartamentoResponsavel { get; set; }
+    public string DepartamentoResponsavel { get; set; }
     public TiposDeDistribuicao TipoDeDistribuicao { get; set; }
     public Prioridades Prioridade { get; set; }
     public ContagensDePrazo ContagemDePrazo { get; set; }
@@ -29,7 +29,7 @@ public class Atividade
         Nome = nome;
         Descricao = descricao;
         EstahAtiva = estahAtiva;
-        CodigoDoDepartamentoResponsavel = departamentoResponsavel;
+        DepartamentoResponsavel = departamentoResponsavel;
         TipoDeDistribuicao = tipoDeDistribuicao;
         Prioridade = prioridade;
         ContagemDePrazo = contagemDePrazo;

@@ -13,8 +13,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
             {
                 Matricula = "c1111",
                 Nome = "Pedro",
-                CodigoDoDepartamento = "10",
-                NomeDoDepartamento = "Financeiro",
+                Departamento = "Financeiro",
                 Senha = "senha",
                 Funcao = Funcoes.Gestor
             });
@@ -22,8 +21,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
             {
                 Matricula = "c2222",
                 Nome = "Paulo",
-                CodigoDoDepartamento = "20",
-                NomeDoDepartamento = "Suporte",
+                Departamento = "Suporte",
                 Senha = "senha",
                 Funcao = Funcoes.Solucionador
             });
@@ -31,8 +29,7 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
             {
                 Matricula = "c3333",
                 Nome = "João",
-                CodigoDoDepartamento = "30",
-                NomeDoDepartamento = "Desenvolvimento",
+                Departamento = "Desenvolvimento",
                 Senha = "senha",
                 Funcao = Funcoes.Solicitante
             });

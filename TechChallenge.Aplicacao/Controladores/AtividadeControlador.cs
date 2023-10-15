@@ -55,12 +55,12 @@ public class AtividadeControlador : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
 
-        var dadosDoUsuario = ObterUsuario();
-        var atividadeDTO = criarAtividadeDTO.ConverterParaAtividadeDTO(dadosDoUsuario.CodigoDoDepartamento);
+        var usuario = ObterUsuario();
+        var atividadeDTO = criarAtividadeDTO.ConverterParaAtividadeDTO(usuario.Departamento);
 
         try
         {
-            var resposta = _comandos.CriarAtividade(dadosDoUsuario, atividadeDTO);
+            var resposta = _comandos.CriarAtividade(usuario, atividadeDTO);
             return CreatedAtAction(nameof(BuscarAtividade), new { id = resposta.Item1 }, resposta.Item2);
         }
         catch (UsuarioNaoAutorizadoExcecao)
@@ -80,12 +80,12 @@ public class AtividadeControlador : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
 
-        var dadosDoUsuario = ObterUsuario();
-        var atividadeDTO = editarAtividadeDTO.ConverterParaAtividadeDTO(id, dadosDoUsuario.CodigoDoDepartamento);
+        var usuario = ObterUsuario();
+        var atividadeDTO = editarAtividadeDTO.ConverterParaAtividadeDTO(id, usuario.Departamento);
 
         try
         {
-            return _comandos.EditarAtividade(dadosDoUsuario, atividadeDTO)
+            return _comandos.EditarAtividade(usuario, atividadeDTO)
                 ? NoContent()
                 : NotFound();
         }
@@ -123,8 +123,7 @@ public class AtividadeControlador : ControllerBase
         {
             Matricula = claimsIdentity!.FindFirst("Matricula")!.Value,
             Nome = claimsIdentity!.FindFirst("Nome")!.Value,
-            CodigoDoDepartamento = claimsIdentity!.FindFirst("CodigoDoDepartamento")!.Value,
-            NomeDoDepartamento = claimsIdentity!.FindFirst("NomeDoDepartamento")!.Value,
+            Departamento = claimsIdentity!.FindFirst("Departamento")!.Value,
             Funcao = (Funcoes)Enum.Parse(typeof(Funcoes), funcao)
         };
     }

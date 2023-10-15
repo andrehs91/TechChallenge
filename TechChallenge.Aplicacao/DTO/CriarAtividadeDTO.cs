@@ -19,7 +19,7 @@ public class CriarAtividadeDTO
             Nome = Nome,
             Descricao = Descricao,
             EstahAtiva = true,
-            CodigoDoDepartamentoResponsavel = codigoDoDepartamentoResponsavel,
+            DepartamentoResponsavel = codigoDoDepartamentoResponsavel,
             TipoDeDistribuicao = TipoDeDistribuicao,
             Prioridade = Prioridade,
             ContagemDePrazo = ContagemDePrazo,
