@@ -1,11 +1,11 @@
 ﻿using TechChallenge.Dominio.Atividade;
 
-namespace TechChallenge.Infraestrutura.Repositorios;
+namespace TechChallenge.Infraestrutura.Repositories;
 
-public class AtividadeRepositorio : IAtividadeRepositorio
+public class AtividadeRepository : IAtividadeRepository
 {
     public ApplicationDbContext _context;
-    public AtividadeRepositorio(ApplicationDbContext context)
+    public AtividadeRepository(ApplicationDbContext context)
     {
         _context = context;
     }

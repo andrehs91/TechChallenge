@@ -1,8 +1,8 @@
 ﻿using TechChallenge.Dominio.Usuario;
 
-namespace TechChallenge.Aplicacao.Servicos;
+namespace TechChallenge.Aplicacao.Services;
 
-public interface ITokenServico
+public interface ITokenService
 {
     string GenerateToken(Usuario usuario);
 }

@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TechChallenge.Dominio;
 
-namespace TechChallenge.Infraestrutura.Repositorios;
+namespace TechChallenge.Infraestrutura.Repositories;
 
-public class EFRepositorio<T> : IRepositorio<T> where T : Entidade
+public class EntidadeRepository<T> : IEntidadeRepository<T> where T : Entidade
 {
     protected ApplicationDbContext _context;
     protected DbSet<T> _dbSet;
 
-    public EFRepositorio(ApplicationDbContext context)
+    public EntidadeRepository(ApplicationDbContext context)
     {
         _context = context;
         _dbSet = _context.Set<T>();

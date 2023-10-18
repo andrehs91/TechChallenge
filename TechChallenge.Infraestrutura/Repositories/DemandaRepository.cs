@@ -1,11 +1,11 @@
 ﻿using TechChallenge.Dominio.Demanda;
 
-namespace TechChallenge.Infraestrutura.Repositorios;
+namespace TechChallenge.Infraestrutura.Repositories;
 
-public class DemandaRepositorio : IDemandaRepositorio
+public class DemandaRepository : IDemandaRepository
 {
     public ApplicationDbContext _context;
-    public DemandaRepositorio(ApplicationDbContext context)
+    public DemandaRepository(ApplicationDbContext context)
     {
         _context = context;
     }

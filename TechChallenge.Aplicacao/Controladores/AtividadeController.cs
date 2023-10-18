@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using TechChallenge.Aplicacao.Comandos;
+using TechChallenge.Aplicacao.Commands;
 using TechChallenge.Aplicacao.DTO;
 using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Enums;
-using TechChallenge.Dominio.Excecoes;
+using TechChallenge.Dominio.Exceptions;
 using TechChallenge.Dominio.Usuario;
 
-namespace TechChallenge.Aplicacao.Controladores;
+namespace TechChallenge.Aplicacao.Controllers;
 
 [ApiController]
 [Route("/atividade")]
-public class AtividadeControlador : ControllerBase
+public class AtividadeController : ControllerBase
 {
-    private readonly AtividadeComandos _comandos;
+    private readonly AtividadeCommand _comandos;
 
-    public AtividadeControlador(AtividadeComandos comandos)
+    public AtividadeController(AtividadeCommand comandos)
     {
         _comandos = comandos;
     }
@@ -63,7 +63,7 @@ public class AtividadeControlador : ControllerBase
             var resposta = _comandos.CriarAtividade(usuario, atividadeDTO);
             return CreatedAtAction(nameof(BuscarAtividade), new { id = resposta.Item1 }, resposta.Item2);
         }
-        catch (UsuarioNaoAutorizadoExcecao)
+        catch (UsuarioNaoAutorizadoException)
         {
             return Forbid();
         }
@@ -89,7 +89,7 @@ public class AtividadeControlador : ControllerBase
                 ? NoContent()
                 : NotFound();
         }
-        catch (UsuarioNaoAutorizadoExcecao)
+        catch (UsuarioNaoAutorizadoException)
         {
             return Forbid();
         }
@@ -109,7 +109,7 @@ public class AtividadeControlador : ControllerBase
                 ? NoContent()
                 : NotFound();
         }
-        catch (UsuarioNaoAutorizadoExcecao)
+        catch (UsuarioNaoAutorizadoException)
         {
             return Forbid();
         }

@@ -1,6 +1,6 @@
 ﻿namespace TechChallenge.Dominio;
 
-public interface IRepositorio<T> where T : Entidade
+public interface IEntidadeRepository<T> where T : Entidade
 {
     void Criar(T entidade);
     IList<T> BuscarEntidades();

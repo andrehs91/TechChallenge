@@ -1,11 +1,11 @@
 ﻿using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Usuario;
 
-namespace TechChallenge.Infraestrutura.Repositorios;
+namespace TechChallenge.Infraestrutura.Repositories;
 
-public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
+public class UsuarioRepository : EntidadeRepository<Usuario>, IUsuarioRepository
 {
-    public UsuarioRepositorio(ApplicationDbContext context) : base(context)
+    public UsuarioRepository(ApplicationDbContext context) : base(context)
     {
         if (!_context.Usuarios.Any())
         {
@@ -35,6 +35,6 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
 
     public Usuario? BuscarPorMatricula(string matricula)
     {
-        return _context.Usuarios.FirstOrDefault(u => u.Matricula == matricula);
+        return _context.Usuarios.FirstOrDefault(u => u.Matricula.ToLower() == matricula.ToLower());
     }
 }

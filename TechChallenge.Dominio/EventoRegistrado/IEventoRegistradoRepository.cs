@@ -1,6 +1,6 @@
 ﻿namespace TechChallenge.Dominio.EventoRegistrado;
 
-public interface IEventoRegistradoRepositorio
+public interface IEventoRegistradoRepository
 {
     void CriarEvento(EventoRegistrado evento);
     IList<EventoRegistrado> BuscarEventos();

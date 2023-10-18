@@ -4,22 +4,22 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
-using TechChallenge.Aplicacao.Comandos;
-using TechChallenge.Aplicacao.Servicos;
+using TechChallenge.Aplicacao.Commands;
+using TechChallenge.Aplicacao.Services;
 using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Demanda;
 using TechChallenge.Dominio.Usuario;
-using TechChallenge.Infraestrutura.Repositorios;
+using TechChallenge.Infraestrutura.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("DATABASE"));
-builder.Services.AddScoped<ITokenServico, TokenServico>();
-builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
-builder.Services.AddScoped<IAtividadeRepositorio, AtividadeRepositorio>();
-builder.Services.AddScoped<IDemandaRepositorio, DemandaRepositorio>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IAtividadeRepository, AtividadeRepository>();
+builder.Services.AddScoped<IDemandaRepository, DemandaRepository>();
 builder.Services.AddScoped<AtividadeAgragacao>();
-builder.Services.AddScoped<AtividadeComandos>();
+builder.Services.AddScoped<AtividadeCommand>();
 builder.Services.AddAuthentication(o =>
 {
     o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

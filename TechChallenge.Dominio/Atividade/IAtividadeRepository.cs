@@ -1,6 +1,6 @@
 ﻿namespace TechChallenge.Dominio.Atividade;
 
-public interface IAtividadeRepositorio
+public interface IAtividadeRepository
 {
     void CriarAtividade(Atividade atividade);
     IList<Atividade> BuscarAtividades();

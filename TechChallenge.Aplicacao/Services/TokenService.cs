@@ -4,13 +4,13 @@ using System.Security.Claims;
 using System.Text;
 using TechChallenge.Dominio.Usuario;
 
-namespace TechChallenge.Aplicacao.Servicos;
+namespace TechChallenge.Aplicacao.Services;
 
-public class TokenServico : ITokenServico
+public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
 
-    public TokenServico(IConfiguration configuration)
+    public TokenService(IConfiguration configuration)
     {
         _configuration = configuration;
     }

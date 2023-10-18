@@ -1,16 +1,16 @@
 ﻿using TechChallenge.Aplicacao.DTO;
 using TechChallenge.Dominio.Atividade;
-using TechChallenge.Dominio.Excecoes;
+using TechChallenge.Dominio.Exceptions;
 using TechChallenge.Dominio.Usuario;
 
-namespace TechChallenge.Aplicacao.Comandos;
+namespace TechChallenge.Aplicacao.Commands;
 
-public class AtividadeComandos
+public class AtividadeCommand
 {
-    private readonly IAtividadeRepositorio _repositorio;
+    private readonly IAtividadeRepository _repositorio;
     private readonly AtividadeAgragacao _agregacao;
 
-    public AtividadeComandos(IAtividadeRepositorio repositorio, AtividadeAgragacao agregacao)
+    public AtividadeCommand(IAtividadeRepository repositorio, AtividadeAgragacao agregacao)
     {
         _repositorio = repositorio;
         _agregacao = agregacao;
@@ -21,7 +21,7 @@ public class AtividadeComandos
         Atividade atividade = AtividadeDTO.DTOParaEntidade(atividadeDTO);
         
         if (!_agregacao.UsuarioPodeCriarAtividade(usuario, atividade))
-            throw new UsuarioNaoAutorizadoExcecao();
+            throw new UsuarioNaoAutorizadoException();
         
         _repositorio.CriarAtividade(atividade);
         return Tuple.Create(atividade.Id, atividade);
@@ -44,7 +44,7 @@ public class AtividadeComandos
         if (atividade is null) return false;
 
         if (!_agregacao.UsuarioPodeEditarAtividade(usuario, atividade))
-            throw new UsuarioNaoAutorizadoExcecao();
+            throw new UsuarioNaoAutorizadoException();
 
         atividade.Nome = atividadeDTO.Nome;
         atividade.Descricao = atividadeDTO.Descricao;
@@ -66,7 +66,7 @@ public class AtividadeComandos
         if (atividade is null) return false;
 
         if (!_agregacao.UsuarioPodeApagarAtividade(usuario, atividade))
-            throw new UsuarioNaoAutorizadoExcecao();
+            throw new UsuarioNaoAutorizadoException();
 
         _repositorio.ApagarAtividade(atividade);
 

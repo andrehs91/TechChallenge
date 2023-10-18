@@ -4,7 +4,7 @@ using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Demanda;
 using TechChallenge.Dominio.EventoRegistrado;
 
-namespace TechChallenge.Infraestrutura.Repositorios;
+namespace TechChallenge.Infraestrutura.Repositories;
 
 public class ApplicationDbContext : DbContext
 {

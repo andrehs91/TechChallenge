@@ -1,6 +1,6 @@
 ﻿namespace TechChallenge.Dominio.Demanda;
 
-public interface IDemandaRepositorio
+public interface IDemandaRepository
 {
     void CriarDemanda(Demanda demanda);
     IList<Demanda> BuscarDemandas();

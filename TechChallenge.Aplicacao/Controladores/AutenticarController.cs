@@ -1,18 +1,18 @@
 ﻿using TechChallenge.Aplicacao.DTO;
-using TechChallenge.Aplicacao.Servicos;
+using TechChallenge.Aplicacao.Services;
 using TechChallenge.Dominio.Usuario;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TechChallenge.Aplicacao.Controladores;
+namespace TechChallenge.Aplicacao.Controllers;
 
 [ApiController]
 [Route("/autenticar")]
-public class AutenticarControlador : ControllerBase
+public class AutenticarController : ControllerBase
 {
-    private readonly IUsuarioRepositorio _usuarioRepositorio;
-    private readonly ITokenServico _tokenService;
+    private readonly IUsuarioRepository _usuarioRepositorio;
+    private readonly ITokenService _tokenService;
 
-    public AutenticarControlador(IUsuarioRepositorio usuarioRepositorio, ITokenServico tokenService)
+    public AutenticarController(IUsuarioRepository usuarioRepositorio, ITokenService tokenService)
     {
         _usuarioRepositorio = usuarioRepositorio;
         _tokenService = tokenService;
