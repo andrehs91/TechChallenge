@@ -8,11 +8,13 @@ public class Atividade
     public string Nome { get; set; }
     public string Descricao { get; set; }
     public bool EstahAtiva { get; set; }
-    public string DepartamentoResponsavel { get; set; }
+    public Departamentos DepartamentoResponsavel { get; set; }
     public TiposDeDistribuicao TipoDeDistribuicao { get; set; }
     public Prioridades Prioridade { get; set; }
     public ContagensDePrazo ContagemDePrazo { get; set; }
     public int PrazoEstimado { get; set; }
+    public IList<Demanda.Demanda> Demandas { get; set; } = new List<Demanda.Demanda>();
+    public IList<Usuario.Usuario> Solucionadores { get; set; } = new List<Usuario.Usuario>();
 
     public Atividade() { }
 
@@ -20,7 +22,7 @@ public class Atividade
         string nome,
         string descricao,
         bool estahAtiva,
-        string departamentoResponsavel,
+        Departamentos departamentoResponsavel,
         TiposDeDistribuicao tipoDeDistribuicao,
         Prioridades prioridade,
         ContagensDePrazo contagemDePrazo,

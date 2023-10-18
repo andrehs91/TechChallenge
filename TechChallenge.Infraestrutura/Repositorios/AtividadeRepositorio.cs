@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TechChallenge.Dominio.Atividade;
+﻿using TechChallenge.Dominio.Atividade;
 
 namespace TechChallenge.Infraestrutura.Repositorios;
 
@@ -29,7 +28,7 @@ public class AtividadeRepositorio : IAtividadeRepositorio
 
     public void EditarAtividade(Atividade atividade)
     {
-        _context.Entry(atividade).State = EntityState.Modified;
+        _context.Atividades.Update(atividade);
         _context.SaveChanges();
     }
 

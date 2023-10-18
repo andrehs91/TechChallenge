@@ -23,7 +23,7 @@ public class TokenServico : ITokenServico
             new Claim(ClaimTypes.Role, usuario.Funcao.ToString()),
             new Claim("Matricula", usuario.Matricula),
             new Claim("Nome", usuario.Nome),
-            new Claim("Departamento", usuario.Departamento),
+            new Claim("Departamento", usuario.Departamento.ToString()),
             new Claim("Funcao", usuario.Funcao.ToString())
         };
         //foreach (var Role in usuario.Roles)

@@ -13,7 +13,7 @@ public class EditarAtividadeDTO
     [JsonConverter(typeof(JsonStringEnumConverter))] public ContagensDePrazo ContagemDePrazo { get; set; }
     public int PrazoEstimado { get; set; }
 
-    public AtividadeDTO ConverterParaAtividadeDTO(int id, string codigoDoDepartamentoResponsavel)
+    public AtividadeDTO ConverterParaAtividadeDTO(int id, Departamentos departamentoResponsavel)
     {
         return new AtividadeDTO()
         {
@@ -21,7 +21,7 @@ public class EditarAtividadeDTO
             Nome = Nome,
             Descricao = Descricao,
             EstahAtiva = EstahAtiva,
-            DepartamentoResponsavel = codigoDoDepartamentoResponsavel,
+            DepartamentoResponsavel = departamentoResponsavel,
             TipoDeDistribuicao = TipoDeDistribuicao,
             Prioridade = Prioridade,
             ContagemDePrazo = ContagemDePrazo,

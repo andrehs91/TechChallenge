@@ -1,1 +1,0 @@
-- Transformar as propriedades Departamento e DepartamentoResponsavel em Value Objects

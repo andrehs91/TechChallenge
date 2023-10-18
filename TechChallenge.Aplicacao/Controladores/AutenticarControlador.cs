@@ -21,12 +21,15 @@ public class AutenticarControlador : ControllerBase
     [HttpPost]
     public IActionResult Authenticate([FromBody] AutenticarDTO AutenticarDTO)
     {
-        var usuario = _usuarioRepositorio.BuscarPorCodigoESenha(AutenticarDTO.Matricula, AutenticarDTO.Senha);
-
-        if (usuario == null) return NotFound(new { mensagem = "Matrícula e/ou senha inválidos." });
-
+        string mensagem = "Matrícula e/ou senha inválidos.";
+        
+        if (AutenticarDTO.Senha != "senha") return NotFound(new { mensagem });
+        
+        var usuario = _usuarioRepositorio.BuscarPorMatricula(AutenticarDTO.Matricula);
+        
+        if (usuario == null) return NotFound(new { mensagem });
+        
         var token = _tokenService.GenerateToken(usuario);
-        usuario.Senha = null;
         return Ok(new
         {
             Usuario = usuario,

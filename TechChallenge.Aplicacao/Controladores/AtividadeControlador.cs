@@ -119,11 +119,12 @@ public class AtividadeControlador : ControllerBase
     {
         var claimsIdentity = User.Identity as ClaimsIdentity;
         var funcao = claimsIdentity!.Claims.Where(c => c.Type == ClaimTypes.Role).Order().First().Value;
+        var departamento = claimsIdentity!.FindFirst("Departamento")!.Value;
         return new Usuario()
         {
             Matricula = claimsIdentity!.FindFirst("Matricula")!.Value,
             Nome = claimsIdentity!.FindFirst("Nome")!.Value,
-            Departamento = claimsIdentity!.FindFirst("Departamento")!.Value,
+            Departamento = (Departamentos)Enum.Parse(typeof(Departamentos), departamento),
             Funcao = (Funcoes)Enum.Parse(typeof(Funcoes), funcao)
         };
     }

@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using TechChallenge.Aplicacao.Comandos;
 using TechChallenge.Aplicacao.Servicos;
 using TechChallenge.Dominio.Atividade;
+using TechChallenge.Dominio.Demanda;
 using TechChallenge.Dominio.Usuario;
 using TechChallenge.Infraestrutura.Repositorios;
 
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("
 builder.Services.AddScoped<ITokenServico, TokenServico>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<IAtividadeRepositorio, AtividadeRepositorio>();
+builder.Services.AddScoped<IDemandaRepositorio, DemandaRepositorio>();
 builder.Services.AddScoped<AtividadeAgragacao>();
 builder.Services.AddScoped<AtividadeComandos>();
 builder.Services.AddAuthentication(o =>

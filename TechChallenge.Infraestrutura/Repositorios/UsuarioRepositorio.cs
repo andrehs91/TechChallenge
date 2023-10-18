@@ -13,32 +13,28 @@ public class UsuarioRepositorio : EFRepositorio<Usuario>, IUsuarioRepositorio
             {
                 Matricula = "c1111",
                 Nome = "Pedro",
-                Departamento = "Financeiro",
-                Senha = "senha",
+                Departamento = Departamentos.Financeiro,
                 Funcao = Funcoes.Gestor
             });
             Criar(new Usuario
             {
                 Matricula = "c2222",
                 Nome = "Paulo",
-                Departamento = "Suporte",
-                Senha = "senha",
+                Departamento = Departamentos.SuporteTecnologico,
                 Funcao = Funcoes.Solucionador
             });
             Criar(new Usuario
             {
                 Matricula = "c3333",
                 Nome = "João",
-                Departamento = "Desenvolvimento",
-                Senha = "senha",
+                Departamento = Departamentos.Desenvolvimento,
                 Funcao = Funcoes.Solicitante
             });
         }
     }
 
-    public Usuario? BuscarPorCodigoESenha(string matricula, string senha)
+    public Usuario? BuscarPorMatricula(string matricula)
     {
-        return _context.Usuarios
-            .FirstOrDefault(u => u.Matricula == matricula && u.Senha == senha);
+        return _context.Usuarios.FirstOrDefault(u => u.Matricula == matricula);
     }
 }
