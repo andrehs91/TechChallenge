@@ -12,7 +12,12 @@ using TechChallenge.Infraestrutura.Repositorios;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("DATABASE"));
+var connection = builder.Configuration["MySQlConnection:MySQlConnectionString"];
+builder.Services.AddDbContext<ApplicationDbContext>(o => {
+
+    o.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 31)));
+});
+
 builder.Services.AddScoped<ITokenServico, TokenServico>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<IAtividadeRepositorio, AtividadeRepositorio>();
