@@ -2,7 +2,7 @@
 
 namespace TechChallenge.Dominio.Usuario;
 
-public class Usuario : Entidade
+public class Usuario : Entidade, IEquatable<Usuario>
 {
     public string Matricula { get; set; }
     public string Nome { get; set; }
@@ -16,5 +16,11 @@ public class Usuario : Entidade
         Matricula = matricula;
         Nome = nome;
         Departamento = departamento;
+    }
+
+    public bool Equals(Usuario? other)
+    {
+        if (other is null) return false;
+        return Id == other.Id;
     }
 }

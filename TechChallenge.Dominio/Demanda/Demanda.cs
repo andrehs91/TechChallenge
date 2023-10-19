@@ -4,7 +4,7 @@ namespace TechChallenge.Dominio.Demanda;
 
 public class Demanda
 {
-    // MOVER CÓDIGO PARA AGREGAÇÃOO
+    // MOVER CÓDIGO PARA COMANDOS
     //private static readonly Dictionary<Situacoes, CategoriasDeSituacoes> SituacoesESuasCategorias = new()
     //{
     //    { Situacoes.AguardandoDistribuicao, CategoriasDeSituacoes.Ativa },

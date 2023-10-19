@@ -1,4 +1,6 @@
-﻿using TechChallenge.Dominio.Atividade;
+﻿using Microsoft.EntityFrameworkCore;
+using TechChallenge.Dominio.Atividade;
+using TechChallenge.Dominio.Enums;
 
 namespace TechChallenge.Infraestrutura.Repositories;
 
@@ -21,9 +23,19 @@ public class AtividadeRepository : IAtividadeRepository
         return _context.Atividades.ToList();
     }
 
+    public IList<Atividade> BuscarAtividadesAtivas()
+    {
+        return _context.Atividades.Where(a => a.EstahAtiva).ToList();
+    }
+
+    public IList<Atividade> BuscarAtividadesPorDepartamentoResponsavel(Departamentos departamento)
+    {
+        return _context.Atividades.Where(a => a.DepartamentoResponsavel == departamento).ToList();
+    }
+
     public Atividade? BuscarAtividade(int id)
     {
-        return _context.Atividades.Find(id);
+        return _context.Atividades.Include(a => a.Solucionadores).Where(a => a.Id == id).FirstOrDefault();
     }
 
     public void EditarAtividade(Atividade atividade)

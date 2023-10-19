@@ -18,6 +18,20 @@ public class UsuarioRepository : EntidadeRepository<Usuario>, IUsuarioRepository
             });
             Criar(new Usuario
             {
+                Matricula = "c1112",
+                Nome = "Tiago",
+                Departamento = Departamentos.Financeiro,
+                Funcao = Funcoes.Solicitante
+            });
+            Criar(new Usuario
+            {
+                Matricula = "c1113",
+                Nome = "André",
+                Departamento = Departamentos.Financeiro,
+                Funcao = Funcoes.Solicitante
+            });
+            Criar(new Usuario
+            {
                 Matricula = "c2222",
                 Nome = "Paulo",
                 Departamento = Departamentos.SuporteTecnologico,
@@ -33,8 +47,24 @@ public class UsuarioRepository : EntidadeRepository<Usuario>, IUsuarioRepository
         }
     }
 
-    public Usuario? BuscarPorMatricula(string matricula)
+    public Usuario? BuscarUsuarioPorMatricula(string matricula)
     {
         return _context.Usuarios.FirstOrDefault(u => u.Matricula.ToLower() == matricula.ToLower());
+    }
+
+    public IList<Usuario> BuscarUsuariosPorIds(IList<long> idsDosUsuarios)
+    {
+        return _context.Usuarios.Where(u => idsDosUsuarios.Contains(u.Id)).ToList();
+    }
+
+    public IList<Usuario> BuscarUsuariosPorDepartamento(Departamentos departamento)
+    {
+        return _context.Usuarios.Where(u => u.Departamento == departamento).ToList();
+    }
+
+    public void DefinirGestores(IList<Usuario> usuarios)
+    {
+        _context.Usuarios.UpdateRange(usuarios);
+        _context.SaveChanges();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Enums;
+using TechChallenge.Dominio.Usuario;
 
 namespace TechChallenge.Aplicacao.DTO;
 
@@ -15,6 +16,7 @@ public class AtividadeDTO
     [JsonConverter(typeof(JsonStringEnumConverter))] public Prioridades Prioridade { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))] public ContagensDePrazo ContagemDePrazo { get; set; }
     public int PrazoEstimado { get; set; }
+    public IList<Usuario> Solucionadores { get; set; } = new List<Usuario>();
 
     public static AtividadeDTO EntidadeParaDTO (Atividade atividade)
     {
@@ -28,7 +30,8 @@ public class AtividadeDTO
             TipoDeDistribuicao = atividade.TipoDeDistribuicao,
             Prioridade = atividade.Prioridade,
             ContagemDePrazo = atividade.ContagemDePrazo,
-            PrazoEstimado = atividade.PrazoEstimado
+            PrazoEstimado = atividade.PrazoEstimado,
+            Solucionadores = atividade.Solucionadores
         };
     }
 
@@ -43,7 +46,7 @@ public class AtividadeDTO
             TipoDeDistribuicao = atividadeDTO.TipoDeDistribuicao,
             Prioridade = atividadeDTO.Prioridade,
             ContagemDePrazo = atividadeDTO.ContagemDePrazo,
-            PrazoEstimado = atividadeDTO.PrazoEstimado
+            PrazoEstimado = atividadeDTO.PrazoEstimado,
         };
     }
 }

@@ -11,7 +11,7 @@ using TechChallenge.Dominio.Usuario;
 namespace TechChallenge.Aplicacao.Controllers;
 
 [ApiController]
-[Route("/atividade")]
+[Route("[controller]")]
 public class AtividadeController : ControllerBase
 {
     private readonly AtividadeCommand _comandos;
@@ -21,13 +21,26 @@ public class AtividadeController : ControllerBase
         _comandos = comandos;
     }
 
-    [HttpGet]
+    [HttpGet("ativas")]
     [Authorize]
     [ProducesResponseType(typeof(IList<AtividadeDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult<IList<AtividadeDTO>> BuscarAtividades()
+    public ActionResult<IList<AtividadeDTO>> ListarAtividadesAtivas()
     {
-        var listaDeAtividadesDTO = _comandos.BuscarAtividades()
+        var listaDeAtividadesDTO = _comandos.ListarAtividadesAtivas()
+            .Select(AtividadeDTO.EntidadeParaDTO)
+            .ToList();
+        return Ok(listaDeAtividadesDTO);
+    }
+
+    [HttpGet("do-departamento")]
+    [Authorize]
+    [ProducesResponseType(typeof(IList<AtividadeDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public ActionResult<IList<AtividadeDTO>> ListarAtividadesDoDepartamento()
+    {
+        var usuario = ObterUsuarioAutenticado();
+        var listaDeAtividadesDTO = _comandos.ListarAtividadesPorDepartamentoResponsavel(usuario)
             .Select(AtividadeDTO.EntidadeParaDTO)
             .ToList();
         return Ok(listaDeAtividadesDTO);
@@ -38,14 +51,14 @@ public class AtividadeController : ControllerBase
     [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<AtividadeDTO> BuscarAtividade(int id)
+    public ActionResult<AtividadeDTO> ConsultarAtividade(int id)
     {
-        return _comandos.BuscarAtividade(id) is Atividade atividade
+        return _comandos.ConsultarAtividade(id) is Atividade atividade
             ? Ok(AtividadeDTO.EntidadeParaDTO(atividade))
-            : NotFound();
+            : NotFound(new RespostaDTO(RespostaDTO.Tipos.Aviso, "Atividade não encontrada."));
     }
 
-    [HttpPost]
+    [HttpPost("criar/")]
     [Authorize(Roles = "Gestor")]
     [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -55,13 +68,13 @@ public class AtividadeController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
 
-        var usuario = ObterUsuario();
+        var usuario = ObterUsuarioAutenticado();
         var atividadeDTO = criarAtividadeDTO.ConverterParaAtividadeDTO(usuario.Departamento);
 
         try
         {
             var resposta = _comandos.CriarAtividade(usuario, atividadeDTO);
-            return CreatedAtAction(nameof(BuscarAtividade), new { id = resposta.Item1 }, resposta.Item2);
+            return CreatedAtAction(nameof(ConsultarAtividade), new { id = resposta.Item1 }, AtividadeDTO.EntidadeParaDTO(resposta.Item2));
         }
         catch (UsuarioNaoAutorizadoException)
         {
@@ -69,7 +82,7 @@ public class AtividadeController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("editar/{id}")]
     [Authorize(Roles = "Gestor")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,7 +93,7 @@ public class AtividadeController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(new BadRequestObjectResult(ModelState));
 
-        var usuario = ObterUsuario();
+        var usuario = ObterUsuarioAutenticado();
         var atividadeDTO = editarAtividadeDTO.ConverterParaAtividadeDTO(id, usuario.Departamento);
 
         try
@@ -95,7 +108,7 @@ public class AtividadeController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("apagar/{id}")]
     [Authorize(Roles = "Gestor")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -105,7 +118,7 @@ public class AtividadeController : ControllerBase
     {
         try
         {
-            return _comandos.ApagarAtividade(ObterUsuario(), id)
+            return _comandos.ApagarAtividade(ObterUsuarioAutenticado(), id)
                 ? NoContent()
                 : NotFound();
         }
@@ -115,7 +128,17 @@ public class AtividadeController : ControllerBase
         }
     }
 
-    private Usuario ObterUsuario()
+    [HttpPost("{id}/definir-solucionadores")]
+    [Authorize(Roles = "Gestor")]
+    public ActionResult<RespostaDTO> DefinirSolucionadores([FromBody] IdsDosUsuariosDTO idsDosUsuariosDTO, int id)
+    {
+        RespostaDTO resposta = _comandos.DefinirSolucionadores(ObterUsuarioAutenticado(), idsDosUsuariosDTO, id);
+        if (resposta.Tipo == RespostaDTO.Tipos.Erro) return BadRequest(resposta);
+        if (resposta.Tipo == RespostaDTO.Tipos.Aviso) return NotFound(resposta);
+        return Ok(resposta);
+    }
+
+    private Usuario ObterUsuarioAutenticado()
     {
         var claimsIdentity = User.Identity as ClaimsIdentity;
         var funcao = claimsIdentity!.Claims.Where(c => c.Type == ClaimTypes.Role).Order().First().Value;

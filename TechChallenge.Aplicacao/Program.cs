@@ -18,7 +18,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAtividadeRepository, AtividadeRepository>();
 builder.Services.AddScoped<IDemandaRepository, DemandaRepository>();
-builder.Services.AddScoped<AtividadeAgragacao>();
+builder.Services.AddScoped<UsuarioCommand>();
 builder.Services.AddScoped<AtividadeCommand>();
 builder.Services.AddAuthentication(o =>
 {
