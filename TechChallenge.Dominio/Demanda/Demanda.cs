@@ -1,4 +1,4 @@
-﻿using TechChallenge.Dominio.Atividade;
+using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Enums;
 
 namespace TechChallenge.Dominio.Demanda;

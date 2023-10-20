@@ -1,4 +1,4 @@
-﻿using TechChallenge.Aplicacao.DTO;
+using TechChallenge.Aplicacao.DTO;
 using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Demanda;
 using TechChallenge.Dominio.Exceptions;

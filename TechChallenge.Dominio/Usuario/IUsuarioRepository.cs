@@ -1,6 +1,11 @@
-﻿namespace TechChallenge.Dominio.Usuario;
+﻿using TechChallenge.Dominio.Enums;
+
+namespace TechChallenge.Dominio.Usuario;
 
 public interface IUsuarioRepository : IEntidadeRepository<Usuario>
 {
-    public Usuario? BuscarPorMatricula(string matricula);
+    Usuario? BuscarUsuarioPorMatricula(string matricula);
+    IList<Usuario> BuscarUsuariosPorIds(IList<long> idsDosUsuarios);
+    IList<Usuario> BuscarUsuariosPorDepartamento(Departamentos departamento);
+    void DefinirGestores(IList<Usuario> usuarios);
 }
