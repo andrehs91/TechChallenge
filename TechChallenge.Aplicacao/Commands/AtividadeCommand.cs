@@ -24,14 +24,14 @@ public class AtividadeCommand
             throw new UsuarioNaoAutorizadoException();
     }
 
-    public Tuple<int, Atividade> CriarAtividade(Usuario usuario, AtividadeDTO atividadeDTO)
+    public Atividade CriarAtividade(Usuario usuario, AtividadeDTO atividadeDTO)
     {
         Atividade atividade = AtividadeDTO.DTOParaEntidade(atividadeDTO);
 
         VerificarSeUsuarioEstahAutorizado(usuario, atividade);
 
         _repositorioDeAtividades.CriarAtividade(atividade);
-        return Tuple.Create(atividade.Id, atividade);
+        return atividade;
     }
 
     public IList<Atividade> ListarAtividades()

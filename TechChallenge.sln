@@ -9,11 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Dominio", "Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechChallenge.Infraestrutura", "TechChallenge.Infraestrutura\TechChallenge.Infraestrutura.csproj", "{5066A6F4-C90B-4220-8893-385689ECB167}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{096D1E23-253E-4FDA-8A42-36CD00273277}"
-	ProjectSection(SolutionItems) = preProject
-		WIP.txt = WIP.txt
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

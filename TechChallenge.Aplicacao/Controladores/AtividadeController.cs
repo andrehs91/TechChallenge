@@ -73,8 +73,8 @@ public class AtividadeController : ControllerBase
 
         try
         {
-            var resposta = _comandos.CriarAtividade(usuario, atividadeDTO);
-            return CreatedAtAction(nameof(ConsultarAtividade), new { id = resposta.Item1 }, AtividadeDTO.EntidadeParaDTO(resposta.Item2));
+            Atividade atividade = _comandos.CriarAtividade(usuario, atividadeDTO);
+            return CreatedAtAction(nameof(ConsultarAtividade), new { id = atividade.Id }, AtividadeDTO.EntidadeParaDTO(atividade));
         }
         catch (UsuarioNaoAutorizadoException)
         {
