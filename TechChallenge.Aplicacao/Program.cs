@@ -13,13 +13,19 @@ using TechChallenge.Infraestrutura.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("DATABASE"));
+var connection = builder.Configuration["MySQlConnection:MySQlConnectionString"];
+builder.Services.AddDbContext<ApplicationDbContext>(o => {
+
+    o.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 31)));
+});
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAtividadeRepository, AtividadeRepository>();
 builder.Services.AddScoped<IDemandaRepository, DemandaRepository>();
 builder.Services.AddScoped<AtividadeAgragacao>();
 builder.Services.AddScoped<AtividadeCommand>();
+builder.Services.AddScoped<DemandaAgragacao>();
+builder.Services.AddScoped<DemandaCommand>();
 builder.Services.AddAuthentication(o =>
 {
     o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

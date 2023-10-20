@@ -1,7 +1,9 @@
 ﻿namespace TechChallenge.Dominio.Exceptions;
 
 public class UsuarioNaoAutorizadoException : Exception
-{
+{   
+
+    
     public UsuarioNaoAutorizadoException()
     {
     }
@@ -16,3 +18,4 @@ public class UsuarioNaoAutorizadoException : Exception
     {
     }
 }
+

@@ -30,7 +30,7 @@ public class ApplicationDbContext : DbContext
         {
             a.HasKey(a => a.Id);
             a.HasMany(a => a.Demandas)
-                .WithOne(d => d.Atividade)
+                .WithOne(d => d.atividade)
                 .HasForeignKey(d => d.NumeroDaDemanda)
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -38,7 +38,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Demanda>(d =>
         {
             d.HasKey(d => d.NumeroDaDemanda);
-            d.HasOne(d => d.Atividade)
+            d.HasOne(d => d.atividade)
                 .WithMany(a => a.Demandas)
                 .HasPrincipalKey(a => a.Id);
             d.HasMany(d => d.Historico)

@@ -13,7 +13,7 @@ public class Atividade
     public Prioridades Prioridade { get; set; }
     public ContagensDePrazo ContagemDePrazo { get; set; }
     public int PrazoEstimado { get; set; }
-    public IList<Demanda.Demanda> Demandas { get; set; } = new List<Demanda.Demanda>();
+    //public IList<Demanda.Demanda> Demandas { get; set; } = new List<Demanda.Demanda>();
     public IList<Usuario.Usuario> Solucionadores { get; set; } = new List<Usuario.Usuario>();
 
     public Atividade() { }
@@ -36,5 +36,18 @@ public class Atividade
         Prioridade = prioridade;
         ContagemDePrazo = contagemDePrazo;
         PrazoEstimado = prazoEstimado;
+    }
+
+    public DateTime getPrazoAtividade()
+    {
+        switch (ContagemDePrazo)
+        {
+            case ContagensDePrazo.DiasCorridos:
+                return DateTime.UtcNow.AddDays(PrazoEstimado);
+            case ContagensDePrazo.DiasUteis:
+                return DateTime.UtcNow.AddDays(PrazoEstimado);
+            default:
+                return DateTime.UtcNow;
+        }
     }
 }
