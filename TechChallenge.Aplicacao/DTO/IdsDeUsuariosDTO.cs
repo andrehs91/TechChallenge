@@ -2,6 +2,6 @@
 
 public class IdsDosUsuariosDTO
 {
-    public IList<long> IdsDosUsuariosASeremPromovidos { get; set; } = new List<long>();
-    public IList<long> IdsDosUsuariosASeremDemovidos { get; set; } = new List<long>();
+    public IList<int> IdsDosUsuariosASeremPromovidos { get; set; } = new List<int>();
+    public IList<int> IdsDosUsuariosASeremDemovidos { get; set; } = new List<int>();
 }

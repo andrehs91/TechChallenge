@@ -1,14 +1,17 @@
-﻿using TechChallenge.Dominio.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Policies;
 
 namespace TechChallenge.Dominio.Demanda;
 
 public class Demanda
 {
-    public Atividade.Atividade Atividade { get; set; }
-    public long NumeroDaDemanda { get; set; }
-    public IList<EventoRegistrado.EventoRegistrado> Historico { get; set; } = null!;
-    public long? NumeroDaDemandaReaberta { get; set; }
+    [Key]
+    public int Id { get; set; }
+    public int AtividadeId { get; set; }
+    public Atividade.Atividade Atividade { get; set; } = null!;
+    public virtual ICollection<EventoRegistrado.EventoRegistrado> EventosRegistrados { get; set; } = new List<EventoRegistrado.EventoRegistrado>();
+    public int? IdDaDemandaReaberta { get; set; }
     public DateTime MomentoDeAbertura { get; set; }
     public DateTime? MomentoDeFechamento { get; set; } = null;
     public DateTime Prazo { get; set; }
@@ -19,17 +22,19 @@ public class Demanda
     public Usuario.Usuario? UsuarioResponsavel { get; set; }
     public string Detalhes { get; set; } = string.Empty;
 
+    public Demanda() { }
+
     public Demanda(Atividade.Atividade atividade,
-        long? numeroDaDemandaReaberta,
         Usuario.Usuario usuarioSolicitante,
-        string detalhes)
+        string detalhes,
+        int? numeroDaDemandaReaberta = null)
     {
         Situacoes situacao = Situacoes.AguardandoDistribuicao;
         Usuario.Usuario? usuario = IdentificarSolucionadorPolicy.IdentificarSolucionador(atividade);
         if (usuario is not null) situacao = Situacoes.EmAtendimento;
 
         Atividade = atividade;
-        NumeroDaDemandaReaberta = numeroDaDemandaReaberta;
+        IdDaDemandaReaberta = numeroDaDemandaReaberta;
         MomentoDeAbertura = DateTime.Now;
         Prazo = DateTime.Now.AddMinutes(atividade.PrazoEstimado);
         Situacao = situacao;
@@ -44,9 +49,9 @@ public class Demanda
 
     private int? IdentificarUltimoEventoRegistrado()
     {
-        if (Historico is null) return null;
-        var ultimoEventoRegistrado = Historico.OrderByDescending(er => er.NumeroDoRegistro).FirstOrDefault();
-        return Historico.IndexOf(ultimoEventoRegistrado!);
+        if (EventosRegistrados is null) return null;
+        var ultimoEventoRegistrado = EventosRegistrados.OrderByDescending(er => er.Id).FirstOrDefault();
+        return EventosRegistrados.ToList().IndexOf(ultimoEventoRegistrado!);
     }
 
     public void Encaminhar(Usuario.Usuario ator, Usuario.Usuario novoResponsavel, string mensagem)

@@ -26,10 +26,6 @@ public class TokenService : ITokenService
             new Claim("Departamento", usuario.Departamento.ToString()),
             new Claim("Funcao", usuario.Funcao.ToString())
         };
-        //foreach (var Role in usuario.Roles)
-        //{
-        //    claims.Add(new Claim(ClaimTypes.Role, Role.ToString()));
-        //}
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var secret = _configuration.GetValue<string>("Secret");

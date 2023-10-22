@@ -16,17 +16,16 @@ public class UsuarioCommand
     public Usuario? Autenticar(AutenticarDTO autenticarDTO)
     {
         if (autenticarDTO.Senha != "senha") return null;
-
-        return _repositorioDeUsuarios.BuscarUsuarioPorMatricula(autenticarDTO.Matricula);
+        return _repositorioDeUsuarios.BuscarPorMatricula(autenticarDTO.Matricula);
     }
 
     public RespostaDTO DefinirGestoresDoDepartamento(Usuario usuario, IdsDosUsuariosDTO idsDosUsuariosDTO)
     {
-        var usuariosPromovidos = _repositorioDeUsuarios.BuscarUsuariosPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos);
-        var usuariosDemovivos = _repositorioDeUsuarios.BuscarUsuariosPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos);
+        var usuariosPromovidos = _repositorioDeUsuarios.BuscarPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos);
+        var usuariosDemovivos = _repositorioDeUsuarios.BuscarPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos);
 
-        int quantidadeDeIds = idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos.Count() + idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos.Count();
-        int quantidadeDeUsuarios = usuariosPromovidos.Count() + usuariosDemovivos.Count();
+        int quantidadeDeIds = idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos.Count + idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos.Count;
+        int quantidadeDeUsuarios = usuariosPromovidos.Count + usuariosDemovivos.Count;
 
         if (quantidadeDeUsuarios == 0)
             return new RespostaDTO(RespostaDTO.Tipos.Aviso, "Nenhum usuário foi encontrado.");
@@ -41,12 +40,12 @@ public class UsuarioCommand
             usuarioDemovivo.Funcao = Funcoes.Solicitante;
         var usuarios = usuariosPromovidos.Concat(usuariosDemovivos).ToList();
 
-        _repositorioDeUsuarios.DefinirGestores(usuarios);
+        _repositorioDeUsuarios.EditarVarios(usuarios);
         return new RespostaDTO(RespostaDTO.Tipos.Sucesso, "Gestor(es) definido(s) com sucesso.");
     }
 
     public IList<Usuario> ListarUsuariosDoDepartamento(Usuario usuario)
     {
-        return _repositorioDeUsuarios.BuscarUsuariosPorDepartamento(usuario.Departamento);
+        return _repositorioDeUsuarios.BuscarPorDepartamento(usuario.Departamento);
     }
 }

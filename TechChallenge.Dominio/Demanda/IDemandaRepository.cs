@@ -2,9 +2,9 @@
 
 public interface IDemandaRepository
 {
-    void CriarDemanda(Demanda demanda);
-    IList<Demanda> BuscarDemandas();
-    Demanda? BuscarDemanda(long numeroDaDemanda);
-    void EditarDemanda(Demanda demanda);
-    void ApagarDemanda(Demanda demanda);
+    void Criar(Demanda demanda);
+    IList<Demanda> BuscarTodas();
+    Demanda? BuscarPorId(int id);
+    void Editar(Demanda demanda);
+    void Apagar(Demanda demanda);
 }

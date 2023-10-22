@@ -1,9 +1,11 @@
-﻿using TechChallenge.Dominio.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using TechChallenge.Dominio.Enums;
 
 namespace TechChallenge.Dominio.Atividade;
 
 public class Atividade
 {
+    [Key]
     public int Id { get; set; }
     public string Nome { get; set; }
     public string Descricao { get; set; }
@@ -11,10 +13,11 @@ public class Atividade
     public Departamentos DepartamentoResponsavel { get; set; }
     public TiposDeDistribuicao TipoDeDistribuicao { get; set; }
     public Prioridades Prioridade { get; set; }
-    public ContagensDePrazo ContagemDePrazo { get; set; }
     public int PrazoEstimado { get; set; }
-    public IList<Demanda.Demanda> Demandas { get; set; } = new List<Demanda.Demanda>();
-    public IList<Usuario.Usuario> Solucionadores { get; set; } = new List<Usuario.Usuario>();
+    public virtual List<Usuario.Usuario> Solucionadores { get; } = new();
+
+    //public virtual ICollection<RelacionamentoAtividadeUsuario> Solucionadores { get; set; }
+    public virtual ICollection<Demanda.Demanda> Demandas { get; set; } = new List<Demanda.Demanda>();
 
     public Atividade() { }
 
@@ -25,7 +28,6 @@ public class Atividade
         Departamentos departamentoResponsavel,
         TiposDeDistribuicao tipoDeDistribuicao,
         Prioridades prioridade,
-        ContagensDePrazo contagemDePrazo,
         int prazoEstimado)
     {
         Nome = nome;
@@ -34,7 +36,6 @@ public class Atividade
         DepartamentoResponsavel = departamentoResponsavel;
         TipoDeDistribuicao = tipoDeDistribuicao;
         Prioridade = prioridade;
-        ContagemDePrazo = contagemDePrazo;
         PrazoEstimado = prazoEstimado;
     }
 }

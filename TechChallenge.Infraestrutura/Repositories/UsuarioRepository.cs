@@ -1,12 +1,17 @@
 ﻿using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Usuario;
+using TechChallenge.Infraestrutura.Data;
 
 namespace TechChallenge.Infraestrutura.Repositories;
 
-public class UsuarioRepository : EntidadeRepository<Usuario>, IUsuarioRepository
+public class UsuarioRepository : IUsuarioRepository
 {
-    public UsuarioRepository(ApplicationDbContext context) : base(context)
+    protected ApplicationDbContext _context;
+
+    public UsuarioRepository(ApplicationDbContext context)
     {
+        _context = context;
+
         if (!_context.Usuarios.Any())
         {
             Criar(new Usuario
@@ -47,24 +52,73 @@ public class UsuarioRepository : EntidadeRepository<Usuario>, IUsuarioRepository
         }
     }
 
-    public Usuario? BuscarUsuarioPorMatricula(string matricula)
+    public void Criar(Usuario usuario)
     {
-        return _context.Usuarios.FirstOrDefault(u => u.Matricula.ToLower() == matricula.ToLower());
+        _context.Usuarios.Add(usuario);
+        _context.SaveChanges();
     }
 
-    public IList<Usuario> BuscarUsuariosPorIds(IList<long> idsDosUsuarios)
+    public Usuario? BuscarPorId(int id)
     {
-        return _context.Usuarios.Where(u => idsDosUsuarios.Contains(u.Id)).ToList();
+        return _context.Usuarios.FirstOrDefault(u => u.Id == id);
     }
 
-    public IList<Usuario> BuscarUsuariosPorDepartamento(Departamentos departamento)
+    public Usuario? BuscarPorMatricula(string matricula)
+    {
+        matricula = matricula.ToLower();
+        return _context.Usuarios.FirstOrDefault(u => u.Matricula.ToLower() == matricula);
+    }
+
+    public IList<Usuario> BuscarTodos()
+    {
+        return _context.Usuarios.ToList();
+    }
+
+    public IList<Usuario> BuscarPorIds(IList<int> ids)
+    {
+        return _context.Usuarios.Where(u => ids.Contains(u.Id)).ToList();
+    }
+
+    public IList<Usuario> BuscarPorMatriculas(IList<string> matriculas)
+    {
+        matriculas = matriculas.Select(m => m.ToLower()).ToList();
+        return _context.Usuarios.Where(u => matriculas.Contains(u.Matricula.ToLower())).ToList();
+    }
+
+    public IList<Usuario> BuscarPorDepartamento(Departamentos departamento)
     {
         return _context.Usuarios.Where(u => u.Departamento == departamento).ToList();
     }
 
-    public void DefinirGestores(IList<Usuario> usuarios)
+    public void Editar(Usuario usuario)
+    {
+        _context.Usuarios.Update(usuario);
+        _context.SaveChanges();
+    }
+
+    public void EditarVarios(IList<Usuario> usuarios)
     {
         _context.Usuarios.UpdateRange(usuarios);
         _context.SaveChanges();
+    }
+
+    public void Apagar(int id)
+    {
+        var usuario = BuscarPorId(id);
+        if (usuario is not null)
+        {
+            _context.Usuarios.Remove(usuario);
+            _context.SaveChanges();
+        }
+    }
+
+    public void ApagarVarios(IList<int> ids)
+    {
+        var usuarios = BuscarPorIds(ids);
+        if (usuarios.Any())
+        {
+            _context.Usuarios.RemoveRange(usuarios);
+            _context.SaveChanges();
+        }
     }
 }

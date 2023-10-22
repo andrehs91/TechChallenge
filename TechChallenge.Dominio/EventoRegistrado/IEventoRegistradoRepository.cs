@@ -2,9 +2,10 @@
 
 public interface IEventoRegistradoRepository
 {
-    void CriarEvento(EventoRegistrado evento);
-    IList<EventoRegistrado> BuscarEventos();
-    EventoRegistrado? BuscarEvento(long numeroDoRegistro);
-    void EditarEvento(EventoRegistrado evento);
-    void ApagarEvento(EventoRegistrado evento);
+    void Criar(EventoRegistrado eventoRegistrado);
+    EventoRegistrado? BuscarPorId(short id);
+    IList<EventoRegistrado> BuscarTodos();
+    IList<EventoRegistrado> BuscarPorIdDaDemanda(int id);
+    void Editar(EventoRegistrado eventoRegistrado);
+    void Apagar(EventoRegistrado eventoRegistrado);
 }

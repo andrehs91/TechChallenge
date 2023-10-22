@@ -18,71 +18,81 @@ public class DemandaCommand
         _repositorioDeUsuarios = repositorioDeUsuarios;
     }
 
-    public Demanda AbrirDemanda(Usuario ator, int idDaAtividade, string detalhes)
+    public Demanda BuscarDemanda(int id)
     {
-        var atividade = _repositorioDeAtividades.BuscarAtividade(idDaAtividade);
-        if (atividade is null) throw new AtividadeNaoEncontradaException();
+        return _repositorioDeDemandas.BuscarPorId(id) ?? throw new DemandaNaoEncontradaException();
+    }
 
-        Demanda demanda = new( atividade, null, ator, detalhes );
-        _repositorioDeDemandas.CriarDemanda(demanda);
+    public Demanda AbrirDemanda(Usuario ator, int id, string detalhes)
+    {
+        var atividade = _repositorioDeAtividades.BuscarPorId(id) ?? throw new AtividadeNaoEncontradaException();
+        Demanda demanda = new( atividade, ator, detalhes );
+        _repositorioDeDemandas.Criar(demanda);
         return demanda;
     }
 
-    public void EncaminharDemanda(Usuario ator, long numeroDaDemanda, int idNovoResponsavel, string mensagem)
+    public void EncaminharDemanda(Usuario ator, int id, int idNovoResponsavel, string mensagem)
     {
-        var demanda = _repositorioDeDemandas.BuscarDemanda(numeroDaDemanda);
-        if (demanda is null) throw new DemandaNaoEncontradaException();
-
-        var novoResponsavel = _repositorioDeUsuarios.BuscarEntidade(idNovoResponsavel);
-        if (novoResponsavel is null) throw new UsuarioNaoEncontradoException();
-
+        var novoResponsavel = _repositorioDeUsuarios.BuscarPorId(idNovoResponsavel) ?? throw new UsuarioNaoEncontradoException();
+        var demanda = BuscarDemanda(id);
         demanda.Encaminhar(ator, novoResponsavel, mensagem);
-        _repositorioDeDemandas.EditarDemanda(demanda);
+        _repositorioDeDemandas.Editar(demanda);
     }
 
-    public void CapturarDemanda(Usuario ator, long numeroDaDemanda, string mensagem)
+    public void CapturarDemanda(Usuario ator, int id)
     {
-        var demanda = _repositorioDeDemandas.BuscarDemanda(numeroDaDemanda);
-        if (demanda is null) throw new DemandaNaoEncontradaException();
-
+        var demanda = BuscarDemanda(id);
         demanda.Capturar(ator);
-        _repositorioDeDemandas.EditarDemanda(demanda);
+        _repositorioDeDemandas.Editar(demanda);
     }
 
-    public void RejeitarDemanda(Usuario ator, long numeroDaDemanda, string mensagem)
+    public void RejeitarDemanda(Usuario ator, int id, string mensagem)
     {
-        var demanda = _repositorioDeDemandas.BuscarDemanda(numeroDaDemanda);
-        if (demanda is null) throw new DemandaNaoEncontradaException();
-
+        var demanda = BuscarDemanda(id);
         demanda.Rejeitar(ator, mensagem);
-        _repositorioDeDemandas.EditarDemanda(demanda);
+        _repositorioDeDemandas.Editar(demanda);
     }
 
-    public void ResponderDemanda(Usuario ator, long numeroDaDemanda, string mensagem)
+    public void ResponderDemanda(Usuario ator, int id, string mensagem)
     {
-        var demanda = _repositorioDeDemandas.BuscarDemanda(numeroDaDemanda);
-        if (demanda is null) throw new DemandaNaoEncontradaException();
-
+        var demanda = BuscarDemanda(id);
         demanda.Responder(ator, mensagem);
-        _repositorioDeDemandas.EditarDemanda(demanda);
+        _repositorioDeDemandas.Editar(demanda);
     }
 
-    public void CancelarDemanda(Usuario ator, long numeroDaDemanda, string mensagem)
+    public void CancelarDemanda(Usuario ator, int id, string mensagem)
     {
-        var demanda = _repositorioDeDemandas.BuscarDemanda(numeroDaDemanda);
-        if (demanda is null) throw new DemandaNaoEncontradaException();
-
+        var demanda = BuscarDemanda(id);
         demanda.Cancelar(ator, mensagem);
-        _repositorioDeDemandas.EditarDemanda(demanda);
+        _repositorioDeDemandas.Editar(demanda);
     }
 
-    public Demanda ReabrirDemanda(Usuario ator, long numeroDaDemanda, string mensagem)
+    public Demanda ReabrirDemanda(Usuario ator, int id, string mensagem)
     {
-        var demanda = _repositorioDeDemandas.BuscarDemanda(numeroDaDemanda);
-        if (demanda is null) throw new DemandaNaoEncontradaException();
-
+        var demanda = BuscarDemanda(id);
         Demanda novaDemanda = demanda.Reabrir(ator, mensagem);
-        _repositorioDeDemandas.CriarDemanda(novaDemanda);
+        _repositorioDeDemandas.Editar(demanda);
+        _repositorioDeDemandas.Criar(novaDemanda);
         return novaDemanda;
+    }
+
+    internal object? BuscarDemandasDoSolicitante(Usuario usuario)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal object? BuscarDemandasDoDepartamentoSolicitante(Usuario usuario)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal object? BuscarDemandasDoSolucionador(Usuario usuario)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal object? BuscarDemandasDoDepartamentoSolucionador(Usuario usuario)
+    {
+        throw new NotImplementedException();
     }
 }

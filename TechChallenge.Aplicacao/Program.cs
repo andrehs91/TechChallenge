@@ -1,5 +1,5 @@
+using TechChallenge.Aplicacao.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -10,16 +10,18 @@ using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Demanda;
 using TechChallenge.Dominio.Usuario;
 using TechChallenge.Infraestrutura.Repositories;
+using TechChallenge.Infraestrutura.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("DATABASE"));
+builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAtividadeRepository, AtividadeRepository>();
 builder.Services.AddScoped<IDemandaRepository, DemandaRepository>();
 builder.Services.AddScoped<UsuarioCommand>();
 builder.Services.AddScoped<AtividadeCommand>();
+builder.Services.AddScoped<DemandaCommand>();
 builder.Services.AddAuthentication(o =>
 {
     o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -33,11 +35,15 @@ builder.Services.AddAuthentication(o =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.ASCII.GetBytes(
-                builder.Configuration.GetValue<string>("Secret")
+                builder.Configuration["Secret"]!
             )
         ),
         ValidateIssuer = false,
         ValidateAudience = false
+    };
+    o.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context => Handlers.OnAuthenticationFailedHandler(context)
     };
 });
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -72,6 +78,11 @@ builder.Services.AddSwaggerGen(o =>
 
 var app = builder.Build();
 
+app.UseExceptionHandler(new ExceptionHandlerOptions
+{
+    ExceptionHandler = Handlers.ExceptionHandler,
+    AllowStatusCode404Response = true,
+});
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

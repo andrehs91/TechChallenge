@@ -4,11 +4,11 @@ namespace TechChallenge.Dominio.Atividade;
 
 public interface IAtividadeRepository
 {
-    void CriarAtividade(Atividade atividade);
-    IList<Atividade> BuscarAtividades();
-    IList<Atividade> BuscarAtividadesAtivas();
-    IList<Atividade> BuscarAtividadesPorDepartamentoResponsavel(Departamentos departamento);
-    Atividade? BuscarAtividade(int id);
-    void EditarAtividade(Atividade atividade);
-    void ApagarAtividade(Atividade atividade);
+    void Criar(Atividade atividade);
+    Atividade? BuscarPorId(int id);
+    IList<Atividade> BuscarTodas();
+    IList<Atividade> BuscarAtivas();
+    IList<Atividade> BuscarPorDepartamentoResponsavel(Departamentos departamento);
+    void Editar(Atividade atividade);
+    void Apagar(Atividade atividade);
 }

@@ -5,7 +5,7 @@ namespace TechChallenge.Aplicacao.DTO;
 public class AbrirDemandaDTO
 {
     [Required]
-    public int IdDaAtividade { get; set; }
+    public int id { get; set; }
 
     [Required]
     public string Detalhes { get; set; }

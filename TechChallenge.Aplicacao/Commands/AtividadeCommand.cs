@@ -30,33 +30,33 @@ public class AtividadeCommand
 
         VerificarSeUsuarioEstahAutorizado(usuario, atividade);
 
-        _repositorioDeAtividades.CriarAtividade(atividade);
+        _repositorioDeAtividades.Criar(atividade);
         return atividade;
     }
 
     public IList<Atividade> ListarAtividades()
     {
-        return _repositorioDeAtividades.BuscarAtividades();
+        return _repositorioDeAtividades.BuscarTodas();
     }
 
     public IList<Atividade> ListarAtividadesAtivas()
     {
-        return _repositorioDeAtividades.BuscarAtividadesAtivas();
+        return _repositorioDeAtividades.BuscarAtivas();
     }
 
     public IList<Atividade> ListarAtividadesPorDepartamentoResponsavel(Usuario usuario)
     {
-        return _repositorioDeAtividades.BuscarAtividadesPorDepartamentoResponsavel(usuario.Departamento);
+        return _repositorioDeAtividades.BuscarPorDepartamentoResponsavel(usuario.Departamento);
     }
 
-    public Atividade? ConsultarAtividade(int idDaAtividade)
+    public Atividade? ConsultarAtividade(int id)
     {
-        return _repositorioDeAtividades.BuscarAtividade(idDaAtividade);
+        return _repositorioDeAtividades.BuscarPorId(id);
     }
 
     public bool EditarAtividade(Usuario usuario, AtividadeDTO atividadeDTO)
     {
-        var atividade = _repositorioDeAtividades.BuscarAtividade(atividadeDTO.Id);
+        var atividade = _repositorioDeAtividades.BuscarPorId(atividadeDTO.Id);
 
         if (atividade is null) return false;
 
@@ -68,34 +68,33 @@ public class AtividadeCommand
         atividade.DepartamentoResponsavel = atividadeDTO.DepartamentoResponsavel;
         atividade.TipoDeDistribuicao = atividadeDTO.TipoDeDistribuicao;
         atividade.Prioridade = atividadeDTO.Prioridade;
-        atividade.ContagemDePrazo = atividadeDTO.ContagemDePrazo;
         atividade.PrazoEstimado = atividadeDTO.PrazoEstimado;
 
-        _repositorioDeAtividades.EditarAtividade(atividade);
+        _repositorioDeAtividades.Editar(atividade);
         return true;
     }
 
-    public bool ApagarAtividade(Usuario usuario, int idDaAtividade)
+    public bool ApagarAtividade(Usuario usuario, int id)
     {
-        var atividade = _repositorioDeAtividades.BuscarAtividade(idDaAtividade);
+        var atividade = _repositorioDeAtividades.BuscarPorId(id);
 
         if (atividade is null) return false;
 
         VerificarSeUsuarioEstahAutorizado(usuario, atividade);
 
-        _repositorioDeAtividades.ApagarAtividade(atividade);
+        _repositorioDeAtividades.Apagar(atividade);
         return true;
     }
 
-    public RespostaDTO DefinirSolucionadores(Usuario usuario, IdsDosUsuariosDTO idsDosUsuariosDTO, int idDaAtividade)
+    public RespostaDTO DefinirSolucionadores(Usuario usuario, IdsDosUsuariosDTO idsDosUsuariosDTO, int id)
     {
-        var atividade = _repositorioDeAtividades.BuscarAtividade(idDaAtividade);
+        var atividade = _repositorioDeAtividades.BuscarPorId(id);
 
         if (atividade is null) return new RespostaDTO(RespostaDTO.Tipos.Aviso, "Atividade não encontrada.");
         if (atividade.DepartamentoResponsavel != usuario.Departamento) return new RespostaDTO(RespostaDTO.Tipos.Erro, "A atividade não é de responsabilidade do teu departamento.");
 
-        var usuariosPromovidos = _repositorioDeUsuarios.BuscarUsuariosPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos);
-        var usuariosDemovivos = _repositorioDeUsuarios.BuscarUsuariosPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos);
+        var usuariosPromovidos = _repositorioDeUsuarios.BuscarPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos);
+        var usuariosDemovivos = _repositorioDeUsuarios.BuscarPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos);
 
         int quantidadeDeIds = idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos.Count() + idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos.Count();
         int quantidadeDeUsuarios = usuariosPromovidos.Count() + usuariosDemovivos.Count();
@@ -118,7 +117,7 @@ public class AtividadeCommand
                 atividade.Solucionadores.Remove(usuarioDemovivo);
         }
 
-        _repositorioDeAtividades.EditarAtividade(atividade);
+        _repositorioDeAtividades.Editar(atividade);
         return new RespostaDTO(RespostaDTO.Tipos.Sucesso, "Solucionador(es) definido(s) com sucesso.");
     }
 }

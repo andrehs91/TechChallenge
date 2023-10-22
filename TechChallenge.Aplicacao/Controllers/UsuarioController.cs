@@ -3,16 +3,14 @@ using TechChallenge.Aplicacao.Services;
 using TechChallenge.Dominio.Usuario;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
-using System.Security.Claims;
-using TechChallenge.Dominio.Enums;
 using TechChallenge.Aplicacao.Commands;
+using TechChallenge.Dominio.Exceptions;
 
 namespace TechChallenge.Aplicacao.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UsuarioController : ControllerBase
+public class UsuarioController : BaseController
 {
     private readonly UsuarioCommand _comandos;
     private readonly ITokenService _tokenService;
@@ -24,11 +22,17 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPost("autenticar")]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
     public IActionResult Autenticar([FromBody] AutenticarDTO autenticarDTO)
     {
+        // CORRIGIR: Pegar dados de validação
+        if (!ModelState.IsValid) throw new ModeloInvalidoException();
+
         var usuario = _comandos.Autenticar(autenticarDTO);
 
-        if (usuario is null) return NotFound(new { mensagem = "Matrícula e/ou senha inválidos." });
+        if (usuario is null) return NotFound(new RespostaDTO(RespostaDTO.Tipos.Aviso, "Matrícula e/ou senha inválidos."));
 
         return Ok(new
         {
@@ -39,34 +43,26 @@ public class UsuarioController : ControllerBase
 
     [HttpGet("listar-usuarios-do-departamento")]
     [Authorize(Roles = "Gestor")]
+    [ProducesResponseType(typeof(List<Usuario>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status403Forbidden)]
     public ActionResult<List<Usuario>> ListarUsuariosDoDepartamento()
     {
-        var usuario = ObterUsuarioAutenticado();
-
-        return Ok(_comandos.ListarUsuariosDoDepartamento(usuario));
+        return Ok(_comandos.ListarUsuariosDoDepartamento(ObterUsuarioAutenticado()));
     }
 
     [HttpPost("definir-gestores-do-departamento")]
     [Authorize(Roles = "Gestor")]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
     public ActionResult<RespostaDTO> DefinirGestoresDoDepartamento([FromBody] IdsDosUsuariosDTO idsDosUsuariosDTO)
     {
         RespostaDTO resposta = _comandos.DefinirGestoresDoDepartamento(ObterUsuarioAutenticado(), idsDosUsuariosDTO);
         if (resposta.Tipo == RespostaDTO.Tipos.Erro) return BadRequest(resposta);
         if (resposta.Tipo == RespostaDTO.Tipos.Aviso) return NotFound(resposta);
         return Ok(resposta);
-    }
-
-    private Usuario ObterUsuarioAutenticado()
-    {
-        var claimsIdentity = User.Identity as ClaimsIdentity;
-        var funcao = claimsIdentity!.Claims.Where(c => c.Type == ClaimTypes.Role).Order().First().Value;
-        var departamento = claimsIdentity!.FindFirst("Departamento")!.Value;
-        return new Usuario()
-        {
-            Matricula = claimsIdentity!.FindFirst("Matricula")!.Value,
-            Nome = claimsIdentity!.FindFirst("Nome")!.Value,
-            Departamento = (Departamentos)Enum.Parse(typeof(Departamentos), departamento),
-            Funcao = (Funcoes)Enum.Parse(typeof(Funcoes), funcao)
-        };
     }
 }

@@ -1,13 +1,19 @@
-﻿using TechChallenge.Dominio.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using TechChallenge.Dominio.Enums;
 
 namespace TechChallenge.Dominio.Usuario;
 
-public class Usuario : Entidade, IEquatable<Usuario>
+public class Usuario : IEquatable<Usuario>
 {
+    [Key]
+    public int Id { get; set; }
     public string Matricula { get; set; }
     public string Nome { get; set; }
     public Departamentos Departamento { get; set; }
     public Funcoes Funcao { get; set; }
+    public virtual List<Atividade.Atividade> Atividades { get; } = new();
+
+    //public virtual ICollection<RelacionamentoAtividadeUsuario> AtividadesSobResponsabilidade { get; set; }
 
     public Usuario() { }
 
