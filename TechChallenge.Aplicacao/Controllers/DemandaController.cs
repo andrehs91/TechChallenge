@@ -28,7 +28,7 @@ public class DemandaController : BaseController
     public ActionResult<Demanda> BuscarDemanda(int id)
     {
         // CONVERTER RETORNO PARA DEMANDADTO
-        return Ok(_comandos.BuscarDemanda(id));
+        return Ok(_comandos.ConsultarDemanda(id));
     }
 
     [HttpGet("do-solicitante")]
@@ -38,7 +38,7 @@ public class DemandaController : BaseController
     public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoSolicitante()
     {
         // CONVERTER RETORNO PARA DEMANDADTO
-        return Ok(_comandos.BuscarDemandasDoSolicitante(ObterUsuarioAutenticado()));
+        return Ok(_comandos.ListarDemandasDoSolicitante(ObterUsuarioAutenticado()));
     }
 
     [HttpGet("do-departamento-solicitante")]
@@ -48,27 +48,27 @@ public class DemandaController : BaseController
     public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoDepartamentoSolicitante()
     {
         // CONVERTER RETORNO PARA DEMANDADTO
-        return Ok(_comandos.BuscarDemandasDoDepartamentoSolicitante(ObterUsuarioAutenticado()));
+        return Ok(_comandos.ListarDemandasDoDepartamentoSolicitante(ObterUsuarioAutenticado()));
     }
 
-    [HttpGet("do-solucionador")]
+    [HttpGet("do-responsavel")]
     [Authorize]
     [ProducesResponseType(typeof(IEnumerable<Demanda>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
-    public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoSolucionador()
+    public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoResponsavel()
     {
         // CONVERTER RETORNO PARA DEMANDADTO
-        return Ok(_comandos.BuscarDemandasDoSolucionador(ObterUsuarioAutenticado()));
+        return Ok(_comandos.ListarDemandasDoResponsavel(ObterUsuarioAutenticado()));
     }
 
-    [HttpGet("do-departamento-solucionador")]
+    [HttpGet("do-departamento-responsavel")]
     [Authorize]
     [ProducesResponseType(typeof(IEnumerable<Demanda>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
-    public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoDepartamentoSolucionador()
+    public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoDepartamentoResponsavel()
     {
         // CONVERTER RETORNO PARA DEMANDADTO
-        return Ok(_comandos.BuscarDemandasDoDepartamentoSolucionador(ObterUsuarioAutenticado()));
+        return Ok(_comandos.ListarDemandasDoDepartamentoResponsavel(ObterUsuarioAutenticado()));
     }
 
     [HttpPost("abrir")]
