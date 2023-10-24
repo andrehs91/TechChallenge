@@ -1,9 +1,8 @@
-﻿using TechChallenge.Aplicacao.DTO;
-using TechChallenge.Aplicacao.Services;
-using TechChallenge.Dominio.Usuario;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using TechChallenge.Aplicacao.Commands;
+using TechChallenge.Aplicacao.DTO;
+using TechChallenge.Aplicacao.Services;
 using TechChallenge.Dominio.Exceptions;
 
 namespace TechChallenge.Aplicacao.Controllers;
@@ -43,12 +42,12 @@ public class UsuarioController : BaseController
 
     [HttpGet("listar-usuarios-do-departamento")]
     [Authorize(Roles = "Gestor")]
-    [ProducesResponseType(typeof(List<Usuario>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<UsuarioDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status403Forbidden)]
-    public ActionResult<List<Usuario>> ListarUsuariosDoDepartamento()
+    public ActionResult<List<UsuarioDTO>> ListarUsuariosDoDepartamento()
     {
-        return Ok(_comandos.ListarUsuariosDoDepartamento(ObterUsuarioAutenticado()));
+        return Ok(_comandos.ListarUsuariosDoDepartamento(ObterUsuarioAutenticado()).Select(u => new UsuarioDTO(u)));
     }
 
     [HttpPost("definir-gestores-do-departamento")]

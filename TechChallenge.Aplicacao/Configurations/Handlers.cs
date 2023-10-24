@@ -19,7 +19,24 @@ public static class Handlers
             await context.Response.WriteAsync(
                 Encoding.UTF8.GetString(
                     JsonSerializer.SerializeToUtf8Bytes(
-                        new RespostaDTO(RespostaDTO.Tipos.Erro, "Token Inválido.")
+                        new RespostaDTO(RespostaDTO.Tipos.Erro, "Token inválido.")
+                    )
+                )
+            );
+        });
+        return Task.CompletedTask;
+    }
+
+    public static Task OnForbiddenHandler(ForbiddenContext context)
+    {
+        context.Response.OnStarting(async () =>
+        {
+            context.Response.StatusCode = 403;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(
+                Encoding.UTF8.GetString(
+                    JsonSerializer.SerializeToUtf8Bytes(
+                        new RespostaDTO(RespostaDTO.Tipos.Erro, "Usuário não autorizado.")
                     )
                 )
             );

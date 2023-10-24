@@ -1,16 +1,16 @@
-using TechChallenge.Aplicacao.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 using TechChallenge.Aplicacao.Commands;
+using TechChallenge.Aplicacao.Configurations;
 using TechChallenge.Aplicacao.Services;
 using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Demanda;
 using TechChallenge.Dominio.Usuario;
-using TechChallenge.Infraestrutura.Repositories;
 using TechChallenge.Infraestrutura.Data;
+using TechChallenge.Infraestrutura.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,17 +33,14 @@ builder.Services.AddAuthentication(o =>
     o.TokenValidationParameters = new TokenValidationParameters()
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.ASCII.GetBytes(
-                builder.Configuration["Secret"]!
-            )
-        ),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Secret"]!)),
         ValidateIssuer = false,
         ValidateAudience = false
     };
     o.Events = new JwtBearerEvents
     {
-        OnAuthenticationFailed = context => Handlers.OnAuthenticationFailedHandler(context)
+        OnAuthenticationFailed = context => Handlers.OnAuthenticationFailedHandler(context),
+        OnForbidden = context => Handlers.OnForbiddenHandler(context)
     };
 });
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));

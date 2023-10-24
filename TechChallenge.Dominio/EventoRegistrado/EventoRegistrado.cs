@@ -11,7 +11,7 @@ public class EventoRegistrado
     public Situacoes Situacao { get; set;}
     public DateTime MomentoInicial { get; set;}
     public DateTime? MomentoFinal { get; set; } = null;
-    public string Mensagem { get; set; }
+    public string? Mensagem { get; set; }
 
     public EventoRegistrado() { }
 }

@@ -11,8 +11,6 @@ public class Usuario : IEquatable<Usuario>
     public Funcoes Funcao { get; set; }
     public virtual List<Atividade.Atividade> Atividades { get; } = new();
 
-    //public virtual ICollection<RelacionamentoAtividadeUsuario> AtividadesSobResponsabilidade { get; set; }
-
     public Usuario() { }
 
     public Usuario(string matricula, string nome, Departamentos departamento)

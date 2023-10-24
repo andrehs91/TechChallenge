@@ -108,6 +108,11 @@ public class AtividadeController : BaseController
 
     [HttpPost("{id}/definir-solucionadores")]
     [Authorize(Roles = "Gestor")]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
     public ActionResult<RespostaDTO> DefinirSolucionadores([FromBody] IdsDosUsuariosDTO idsDosUsuariosDTO, int id)
     {
         RespostaDTO resposta = _comandos.DefinirSolucionadores(ObterUsuarioAutenticado(), idsDosUsuariosDTO, id);

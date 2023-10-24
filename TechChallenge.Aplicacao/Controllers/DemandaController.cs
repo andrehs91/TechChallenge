@@ -27,7 +27,7 @@ public class DemandaController : BaseController
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
     public ActionResult<Demanda> BuscarDemanda(int id)
     {
-        // CONVERTER RETORNO PARA DEMANDADTO
+        // CONVERTER RETORNO PARA DTO
         return Ok(_comandos.ConsultarDemanda(id));
     }
 
@@ -37,7 +37,7 @@ public class DemandaController : BaseController
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
     public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoSolicitante()
     {
-        // CONVERTER RETORNO PARA DEMANDADTO
+        // CONVERTER RETORNO PARA DTO
         return Ok(_comandos.ListarDemandasDoSolicitante(ObterUsuarioAutenticado()));
     }
 
@@ -47,7 +47,7 @@ public class DemandaController : BaseController
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
     public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoDepartamentoSolicitante()
     {
-        // CONVERTER RETORNO PARA DEMANDADTO
+        // CONVERTER RETORNO PARA DTO
         return Ok(_comandos.ListarDemandasDoDepartamentoSolicitante(ObterUsuarioAutenticado()));
     }
 
@@ -57,7 +57,7 @@ public class DemandaController : BaseController
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
     public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoSolucionador()
     {
-        // CONVERTER RETORNO PARA DEMANDADTO
+        // CONVERTER RETORNO PARA DTO
         return Ok(_comandos.ListarDemandasDoSolucionador(ObterUsuarioAutenticado()));
     }
 
@@ -67,7 +67,7 @@ public class DemandaController : BaseController
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
     public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoDepartamentoSolucionador()
     {
-        // CONVERTER RETORNO PARA DEMANDADTO
+        // CONVERTER RETORNO PARA DTO
         return Ok(_comandos.ListarDemandasDoDepartamentoSolucionador(ObterUsuarioAutenticado()));
     }
 
@@ -82,7 +82,7 @@ public class DemandaController : BaseController
     {
         if (!ModelState.IsValid) throw new ModeloInvalidoException(_detalhesInvalidos);
         var demanda = _comandos.AbrirDemanda(ObterUsuarioAutenticado(), id, detalhes.Conteudo);
-        // CONVERTER RETORNO PARA DEMANDADTO
+        // CONVERTER RETORNO PARA DTO
         return Ok(demanda);
     }
 
@@ -165,7 +165,7 @@ public class DemandaController : BaseController
     {
         if (!ModelState.IsValid) throw new ModeloInvalidoException(_mensagemInvalida);
         var demanda = _comandos.ReabrirDemanda(ObterUsuarioAutenticado(), id, mensagem.Conteudo);
-        // CONVERTER RETORNO PARA DEMANDADTO
+        // CONVERTER RETORNO PARA DTO
         return Ok(demanda);
     }
 }

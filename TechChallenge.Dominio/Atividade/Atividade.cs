@@ -13,9 +13,7 @@ public class Atividade
     public Prioridades Prioridade { get; set; }
     public int PrazoEstimado { get; set; }
     public virtual List<Usuario.Usuario> Solucionadores { get; } = new();
-
-    //public virtual ICollection<RelacionamentoAtividadeUsuario> Solucionadores { get; set; }
-    public virtual ICollection<Demanda.Demanda> Demandas { get; set; } = new List<Demanda.Demanda>();
+    public virtual List<Demanda.Demanda> Demandas { get; set; } = new();
 
     public Atividade() { }
 

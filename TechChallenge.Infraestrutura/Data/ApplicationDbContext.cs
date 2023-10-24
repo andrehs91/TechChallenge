@@ -3,13 +3,17 @@ using TechChallenge.Dominio.Usuario;
 using TechChallenge.Dominio.Atividade;
 using TechChallenge.Dominio.Demanda;
 using TechChallenge.Dominio.EventoRegistrado;
+using Microsoft.Extensions.Configuration;
 
 namespace TechChallenge.Infraestrutura.Data;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    private readonly IConfiguration _configuration;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration) : base(options)
     {
+        _configuration = configuration;
     }
 
     public DbSet<Usuario> Usuarios { get; set; } = null!;
@@ -19,7 +23,7 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TechChallenge;Trusted_Connection=true;");
+        optionsBuilder.UseSqlServer(_configuration.GetConnectionString("SQLServer"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
