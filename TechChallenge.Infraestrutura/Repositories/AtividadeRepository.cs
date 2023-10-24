@@ -34,9 +34,9 @@ public class AtividadeRepository : IAtividadeRepository
         return _context.Atividades.Where(a => a.EstahAtiva).ToList();
     }
 
-    public IList<Atividade> BuscarPorDepartamentoResponsavel(Departamentos departamento)
+    public IList<Atividade> BuscarPorDepartamentoSolucionador(Departamentos departamento)
     {
-        return _context.Atividades.Where(a => a.DepartamentoResponsavel == departamento).ToList();
+        return _context.Atividades.Where(a => a.DepartamentoSolucionador == departamento).ToList();
     }
 
     public void Editar(Atividade atividade)

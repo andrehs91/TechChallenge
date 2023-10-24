@@ -41,21 +41,21 @@ public class DemandaCommand
         return _repositorioDeDemandas.BuscarPorDepartamentoSolicitante(usuario.Departamento);
     }
 
-    internal IList<Demanda> ListarDemandasDoResponsavel(Usuario usuario)
+    internal IList<Demanda> ListarDemandasDoSolucionador(Usuario usuario)
     {
-        return _repositorioDeDemandas.BuscarPorResponsavel(usuario.Id);
+        return _repositorioDeDemandas.BuscarPorSolucionador(usuario.Id);
     }
 
-    internal IList<Demanda> ListarDemandasDoDepartamentoResponsavel(Usuario usuario)
+    internal IList<Demanda> ListarDemandasDoDepartamentoSolucionador(Usuario usuario)
     {
-        return _repositorioDeDemandas.BuscarPorDepartamentoResponsavel(usuario.Departamento);
+        return _repositorioDeDemandas.BuscarPorDepartamentoSolucionador(usuario.Departamento);
     }
 
-    public void EncaminharDemanda(Usuario ator, int id, int idNovoResponsavel, string mensagem)
+    public void EncaminharDemanda(Usuario ator, int id, int idNovoSolucionador, string mensagem)
     {
-        var novoResponsavel = _repositorioDeUsuarios.BuscarPorId(idNovoResponsavel) ?? throw new UsuarioNaoEncontradoException();
+        var novoSolucionador = _repositorioDeUsuarios.BuscarPorId(idNovoSolucionador) ?? throw new UsuarioNaoEncontradoException();
         var demanda = ConsultarDemanda(id);
-        demanda.Encaminhar(ator, novoResponsavel, mensagem);
+        demanda.Encaminhar(ator, novoSolucionador, mensagem);
         _repositorioDeDemandas.Editar(demanda);
     }
 
@@ -91,7 +91,6 @@ public class DemandaCommand
     {
         var demanda = ConsultarDemanda(id);
         Demanda novaDemanda = demanda.Reabrir(ator, mensagem);
-        _repositorioDeDemandas.Editar(demanda);
         _repositorioDeDemandas.Criar(novaDemanda);
         return novaDemanda;
     }

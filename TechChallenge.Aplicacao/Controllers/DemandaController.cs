@@ -51,24 +51,24 @@ public class DemandaController : BaseController
         return Ok(_comandos.ListarDemandasDoDepartamentoSolicitante(ObterUsuarioAutenticado()));
     }
 
-    [HttpGet("do-responsavel")]
+    [HttpGet("do-solucionador")]
     [Authorize]
     [ProducesResponseType(typeof(IEnumerable<Demanda>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
-    public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoResponsavel()
+    public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoSolucionador()
     {
         // CONVERTER RETORNO PARA DEMANDADTO
-        return Ok(_comandos.ListarDemandasDoResponsavel(ObterUsuarioAutenticado()));
+        return Ok(_comandos.ListarDemandasDoSolucionador(ObterUsuarioAutenticado()));
     }
 
-    [HttpGet("do-departamento-responsavel")]
+    [HttpGet("do-departamento-solucionador")]
     [Authorize]
     [ProducesResponseType(typeof(IEnumerable<Demanda>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
-    public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoDepartamentoResponsavel()
+    public ActionResult<IEnumerable<Demanda>> BuscarDemandasDoDepartamentoSolucionador()
     {
         // CONVERTER RETORNO PARA DEMANDADTO
-        return Ok(_comandos.ListarDemandasDoDepartamentoResponsavel(ObterUsuarioAutenticado()));
+        return Ok(_comandos.ListarDemandasDoDepartamentoSolucionador(ObterUsuarioAutenticado()));
     }
 
     [HttpPost("abrir")]
@@ -93,10 +93,10 @@ public class DemandaController : BaseController
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
-    public ActionResult EncaminharDemanda(int id, int idNovoResponsavel, TextoDTO mensagem)
+    public ActionResult EncaminharDemanda(int id, int idNovoSolucionador, TextoDTO mensagem)
     {
         if (!ModelState.IsValid) throw new ModeloInvalidoException(_mensagemInvalida);
-        _comandos.EncaminharDemanda(ObterUsuarioAutenticado(), id, idNovoResponsavel, mensagem.Conteudo);
+        _comandos.EncaminharDemanda(ObterUsuarioAutenticado(), id, idNovoSolucionador, mensagem.Conteudo);
         return NoContent();
     }
 

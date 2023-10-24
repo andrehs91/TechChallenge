@@ -37,7 +37,7 @@ public class AtividadeController : BaseController
     public ActionResult<IList<AtividadeDTO>> ListarAtividadesDoDepartamento()
     {
         var usuario = ObterUsuarioAutenticado();
-        var listaDeAtividadesDTO = _comandos.ListarAtividadesPorDepartamentoResponsavel(usuario)
+        var listaDeAtividadesDTO = _comandos.ListarAtividadesPorDepartamentoSolucionador(usuario)
             .Select(AtividadeDTO.EntidadeParaDTO)
             .ToList();
         return Ok(listaDeAtividadesDTO);

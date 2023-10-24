@@ -8,7 +8,7 @@ public interface IAtividadeRepository
     Atividade? BuscarPorId(int id);
     IList<Atividade> BuscarTodas();
     IList<Atividade> BuscarAtivas();
-    IList<Atividade> BuscarPorDepartamentoResponsavel(Departamentos departamento);
+    IList<Atividade> BuscarPorDepartamentoSolucionador(Departamentos departamento);
     void Editar(Atividade atividade);
     void Apagar(Atividade atividade);
 }

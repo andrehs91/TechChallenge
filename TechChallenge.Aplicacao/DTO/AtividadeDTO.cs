@@ -10,7 +10,7 @@ public class AtividadeDTO
     public string Nome { get; set; }
     public string Descricao { get; set; }
     public bool EstahAtiva { get; set; }
-    public Departamentos DepartamentoResponsavel { get; set; }
+    public Departamentos DepartamentoSolucionador { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))] public TiposDeDistribuicao TipoDeDistribuicao { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))] public Prioridades Prioridade { get; set; }
     public int PrazoEstimado { get; set; }
@@ -23,7 +23,7 @@ public class AtividadeDTO
             Nome = atividade.Nome,
             Descricao = atividade.Descricao,
             EstahAtiva = atividade.EstahAtiva,
-            DepartamentoResponsavel = atividade.DepartamentoResponsavel,
+            DepartamentoSolucionador = atividade.DepartamentoSolucionador,
             TipoDeDistribuicao = atividade.TipoDeDistribuicao,
             Prioridade = atividade.Prioridade,
             PrazoEstimado = atividade.PrazoEstimado,
@@ -37,7 +37,7 @@ public class AtividadeDTO
             Nome = atividadeDTO.Nome,
             Descricao = atividadeDTO.Descricao,
             EstahAtiva = atividadeDTO.EstahAtiva,
-            DepartamentoResponsavel = atividadeDTO.DepartamentoResponsavel,
+            DepartamentoSolucionador = atividadeDTO.DepartamentoSolucionador,
             TipoDeDistribuicao = atividadeDTO.TipoDeDistribuicao,
             Prioridade = atividadeDTO.Prioridade,
             PrazoEstimado = atividadeDTO.PrazoEstimado,

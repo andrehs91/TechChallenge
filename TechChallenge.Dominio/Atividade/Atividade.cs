@@ -1,16 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TechChallenge.Dominio.Enums;
+﻿using TechChallenge.Dominio.Enums;
 
 namespace TechChallenge.Dominio.Atividade;
 
 public class Atividade
 {
-    [Key]
     public int Id { get; set; }
     public string Nome { get; set; }
     public string Descricao { get; set; }
     public bool EstahAtiva { get; set; }
-    public Departamentos DepartamentoResponsavel { get; set; }
+    public Departamentos DepartamentoSolucionador { get; set; }
     public TiposDeDistribuicao TipoDeDistribuicao { get; set; }
     public Prioridades Prioridade { get; set; }
     public int PrazoEstimado { get; set; }
@@ -25,7 +23,7 @@ public class Atividade
         string nome,
         string descricao,
         bool estahAtiva,
-        Departamentos departamentoResponsavel,
+        Departamentos departamentoSolucionador,
         TiposDeDistribuicao tipoDeDistribuicao,
         Prioridades prioridade,
         int prazoEstimado)
@@ -33,7 +31,7 @@ public class Atividade
         Nome = nome;
         Descricao = descricao;
         EstahAtiva = estahAtiva;
-        DepartamentoResponsavel = departamentoResponsavel;
+        DepartamentoSolucionador = departamentoSolucionador;
         TipoDeDistribuicao = tipoDeDistribuicao;
         Prioridade = prioridade;
         PrazoEstimado = prazoEstimado;

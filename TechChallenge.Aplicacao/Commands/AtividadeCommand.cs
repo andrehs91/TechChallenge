@@ -20,7 +20,7 @@ public class AtividadeCommand
     private void VerificarSeUsuarioEstahAutorizado(Usuario usuario, Atividade atividade)
     {
         if (usuario.Funcao != Funcoes.Gestor ||
-            usuario.Departamento != atividade.DepartamentoResponsavel)
+            usuario.Departamento != atividade.DepartamentoSolucionador)
             throw new UsuarioNaoAutorizadoException();
     }
 
@@ -44,9 +44,9 @@ public class AtividadeCommand
         return _repositorioDeAtividades.BuscarAtivas();
     }
 
-    public IList<Atividade> ListarAtividadesPorDepartamentoResponsavel(Usuario usuario)
+    public IList<Atividade> ListarAtividadesPorDepartamentoSolucionador(Usuario usuario)
     {
-        return _repositorioDeAtividades.BuscarPorDepartamentoResponsavel(usuario.Departamento);
+        return _repositorioDeAtividades.BuscarPorDepartamentoSolucionador(usuario.Departamento);
     }
 
     public Atividade? ConsultarAtividade(int id)
@@ -65,7 +65,7 @@ public class AtividadeCommand
         atividade.Nome = atividadeDTO.Nome;
         atividade.Descricao = atividadeDTO.Descricao;
         atividade.EstahAtiva = atividadeDTO.EstahAtiva;
-        atividade.DepartamentoResponsavel = atividadeDTO.DepartamentoResponsavel;
+        atividade.DepartamentoSolucionador = atividadeDTO.DepartamentoSolucionador;
         atividade.TipoDeDistribuicao = atividadeDTO.TipoDeDistribuicao;
         atividade.Prioridade = atividadeDTO.Prioridade;
         atividade.PrazoEstimado = atividadeDTO.PrazoEstimado;
@@ -91,7 +91,7 @@ public class AtividadeCommand
         var atividade = _repositorioDeAtividades.BuscarPorId(id);
 
         if (atividade is null) return new RespostaDTO(RespostaDTO.Tipos.Aviso, "Atividade não encontrada.");
-        if (atividade.DepartamentoResponsavel != usuario.Departamento) return new RespostaDTO(RespostaDTO.Tipos.Erro, "A atividade não é de responsabilidade do teu departamento.");
+        if (atividade.DepartamentoSolucionador != usuario.Departamento) return new RespostaDTO(RespostaDTO.Tipos.Erro, "A atividade não é de responsabilidade do teu departamento.");
 
         var usuariosPromovidos = _repositorioDeUsuarios.BuscarPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos);
         var usuariosDemovivos = _repositorioDeUsuarios.BuscarPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos);

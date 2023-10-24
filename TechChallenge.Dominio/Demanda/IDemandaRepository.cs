@@ -9,8 +9,8 @@ public interface IDemandaRepository
     IList<Demanda> BuscarTodas();
     IList<Demanda> BuscarPorSolicitante(int idSolicitante);
     IList<Demanda> BuscarPorDepartamentoSolicitante(Departamentos departamento);
-    IList<Demanda> BuscarPorResponsavel(int idResponsavel);
-    IList<Demanda> BuscarPorDepartamentoResponsavel(Departamentos departamento);
+    IList<Demanda> BuscarPorSolucionador(int idSolucionador);
+    IList<Demanda> BuscarPorDepartamentoSolucionador(Departamentos departamento);
     void Editar(Demanda demanda);
     void Apagar(Demanda demanda);
 }

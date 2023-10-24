@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TechChallenge.Dominio.Enums;
+﻿using TechChallenge.Dominio.Enums;
 
 namespace TechChallenge.Dominio.Usuario;
 
 public class Usuario : IEquatable<Usuario>
 {
-    [Key]
     public int Id { get; set; }
     public string Matricula { get; set; }
     public string Nome { get; set; }
