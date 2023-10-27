@@ -47,6 +47,7 @@ public class DemandaRepository : IDemandaRepository
             .Include(d => d.UsuarioSolicitante)
             .Include(d => d.UsuarioSolucionador)
             .Where(d => d.UsuarioSolicitanteId == idSolicitante)
+            .OrderBy(d => d.Id)
             .AsNoTracking()
             .ToList();
     }
@@ -60,6 +61,7 @@ public class DemandaRepository : IDemandaRepository
             .Include(d => d.UsuarioSolicitante)
             .Include(d => d.UsuarioSolucionador)
             .Where(d => d.DepartamentoSolicitante == departamento)
+            .OrderBy(d => d.Id)
             .AsNoTracking()
             .ToList();
     }
@@ -73,6 +75,8 @@ public class DemandaRepository : IDemandaRepository
             .Include(d => d.UsuarioSolicitante)
             .Include(d => d.UsuarioSolucionador)
             .Where(d => d.UsuarioSolucionadorId != null && d.UsuarioSolucionadorId == idSolucionador)
+            .OrderBy(d => d.Atividade.Prioridade)
+            .OrderBy(d => d.Prazo)
             .AsNoTracking()
             .ToList();
     }
@@ -86,6 +90,8 @@ public class DemandaRepository : IDemandaRepository
             .Include(d => d.UsuarioSolicitante)
             .Include(d => d.UsuarioSolucionador)
             .Where(d => d.DepartamentoSolucionador == departamento)
+            .OrderBy(d => d.Atividade.Prioridade)
+            .OrderBy(d => d.Prazo)
             .AsNoTracking()
             .ToList();
     }
