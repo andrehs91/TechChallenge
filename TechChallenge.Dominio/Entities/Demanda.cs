@@ -1,36 +1,38 @@
 ﻿using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Exceptions;
-using TechChallenge.Dominio.Policies;
 
-namespace TechChallenge.Dominio.Demanda;
+namespace TechChallenge.Dominio.Entities;
 
 public class Demanda
 {
     public int Id { get; set; }
     public int AtividadeId { get; set; }
-    public Atividade.Atividade Atividade { get; set; } = null!;
-    public virtual List<EventoRegistrado.EventoRegistrado> EventosRegistrados { get; set; } = new();
+    public Atividade Atividade { get; set; } = null!;
+    public virtual List<EventoRegistrado> EventosRegistrados { get; set; } = new();
     public int? IdDaDemandaReaberta { get; set; }
     public DateTime MomentoDeAbertura { get; set; }
     public DateTime? MomentoDeFechamento { get; set; } = null;
     public DateTime Prazo { get; set; }
     public Situacoes Situacao { get; set; }
     public Departamentos DepartamentoSolicitante { get; set; }
-    public Usuario.Usuario UsuarioSolicitante { get; set; }
+    public int UsuarioSolicitanteId { get; set; }
+    public Usuario UsuarioSolicitante { get; set; }
     public Departamentos DepartamentoSolucionador { get; set; }
-    public Usuario.Usuario? UsuarioSolucionador { get; set; }
+    public int? UsuarioSolucionadorId { get; set; }
+    public Usuario? UsuarioSolucionador { get; set; }
     public string Detalhes { get; set; } = string.Empty;
 
     public Demanda() { }
 
-    public Demanda(Atividade.Atividade atividade,
-        Usuario.Usuario ator,
+    public Demanda(
+        Atividade atividade,
+        Usuario ator,
+        Usuario? solucionador,
         string detalhes,
         int? idDaDemandaReaberta = null)
     {
         Situacoes situacao = Situacoes.AguardandoDistribuicao;
-        Usuario.Usuario? usuarioSolucionador = IdentificarSolucionadorPolicy.IdentificarSolucionador(atividade);
-        if (usuarioSolucionador is not null) situacao = Situacoes.EmAtendimento;
+        if (solucionador is not null) situacao = Situacoes.EmAtendimento;
 
         Atividade = atividade;
         IdDaDemandaReaberta = idDaDemandaReaberta;
@@ -38,9 +40,9 @@ public class Demanda
         Prazo = DateTime.Now.AddMinutes(atividade.PrazoEstimado);
         Situacao = situacao;
         DepartamentoSolicitante = ator.Departamento;
-        UsuarioSolicitante = ator;
+        UsuarioSolicitanteId = ator.Id;
         DepartamentoSolucionador = atividade.DepartamentoSolucionador;
-        UsuarioSolucionador = usuarioSolucionador;
+        UsuarioSolucionadorId = solucionador?.Id;
         Detalhes = detalhes;
 
         RegistrarEvento();
@@ -48,7 +50,7 @@ public class Demanda
 
     private void RegistrarEvento()
     {
-        EventosRegistrados.Add(new EventoRegistrado.EventoRegistrado()
+        EventosRegistrados.Add(new EventoRegistrado()
         {
             Demanda = this,
             UsuarioSolucionador = UsuarioSolucionador,
@@ -57,7 +59,7 @@ public class Demanda
         });
     }
 
-    private void AlterarEventoRegistrado(string mensagem)
+    private void AtualizarEventoRegistrado(string mensagem)
     {
         var ultimo = EventosRegistrados.OrderByDescending(er => er.Id).FirstOrDefault();
         int indice = EventosRegistrados.ToList().IndexOf(ultimo!);
@@ -66,60 +68,77 @@ public class Demanda
         EventosRegistrados[indice].Mensagem = mensagem;
     }
 
-    public void Encaminhar(Usuario.Usuario ator, Usuario.Usuario novoSolucionador, string mensagem)
+    private void VerificarSeADemandaEstahAtiva()
     {
+        if (Situacao != Situacoes.AguardandoDistribuicao && Situacao != Situacoes.EmAtendimento)
+            throw new UsuarioNaoAutorizadoException("A demanda não está na situação 'Aguardando Distribuição' e nem na situação 'Em Atendimento'.");
+    }
+
+    public void Encaminhar(Usuario ator, Usuario novoSolucionador, string mensagem)
+    {
+        VerificarSeADemandaEstahAtiva();
         if (UsuarioSolucionador is not null && UsuarioSolucionador.Id == ator.Id)
+        {
+            if (ator.Id == novoSolucionador.Id) throw new UsuarioNaoAutorizadoException("O usuário já é o solucionador da demanda.");
             Situacao = Situacoes.EncaminhadaPeloSolucionador;
+        }
         else if (DepartamentoSolucionador == ator.Departamento && ator.Funcao == Funcoes.Gestor)
             Situacao = Situacoes.EncaminhadaPeloGestor;
         else
             throw new UsuarioNaoAutorizadoException("O encaminhamento de demandas é restrito ao solucionador da demanda e aos gestores do departamento solucionador.");
 
-        AlterarEventoRegistrado(mensagem);
+        AtualizarEventoRegistrado(mensagem);
 
         UsuarioSolucionador = novoSolucionador;
         Situacao = Situacoes.EmAtendimento;
         RegistrarEvento();
     }
 
-    public void Capturar(Usuario.Usuario ator)
+    public void Capturar(Usuario ator)
     {
+        VerificarSeADemandaEstahAtiva();
+        if (UsuarioSolucionador is not null && UsuarioSolucionador.Id != ator.Id)
+            throw new UsuarioNaoAutorizadoException("O usuário já é o solucionador da demanda.");
         if (DepartamentoSolucionador != ator.Departamento)
             throw new UsuarioNaoAutorizadoException("A captura de demandas é restrita aos usuários do departamento solucionador.");
 
         Situacao = Situacoes.Capturada;
-        AlterarEventoRegistrado($"Demanda capturada por {ator.Nome}.");
+        AtualizarEventoRegistrado($"Demanda capturada por {ator.Nome}.");
 
         UsuarioSolucionador = ator;
         Situacao = Situacoes.EmAtendimento;
         RegistrarEvento();
     }
 
-    public void Rejeitar(Usuario.Usuario ator, string mensagem)
+    public void Rejeitar(Usuario ator, string mensagem)
     {
+        VerificarSeADemandaEstahAtiva();
         if (UsuarioSolucionador is null || UsuarioSolucionador.Id != ator.Id)
             throw new UsuarioNaoAutorizadoException("A rejeição de demandas é restrita ao solucionador da demanda.");
 
         Situacao = Situacoes.Rejeitada;
-        AlterarEventoRegistrado(mensagem);
+        AtualizarEventoRegistrado(mensagem);
 
         UsuarioSolucionador = null;
         Situacao = Situacoes.AguardandoDistribuicao;
         RegistrarEvento();
     }
 
-    public void Responder(Usuario.Usuario ator, string mensagem)
+    public void Responder(Usuario ator, string mensagem)
     {
+        if (Situacao != Situacoes.EmAtendimento)
+            throw new UsuarioNaoAutorizadoException("A demanda não está na situação 'Em Atendimento'.");
         if (UsuarioSolucionador is null || UsuarioSolucionador.Id != ator.Id)
             throw new UsuarioNaoAutorizadoException("Apenas o solucionador da demanda pode respondê-la.");
 
         MomentoDeFechamento = DateTime.Now;
         Situacao = Situacoes.Respondida;
-        AlterarEventoRegistrado(mensagem);
+        AtualizarEventoRegistrado(mensagem);
     }
 
-    public void Cancelar(Usuario.Usuario ator, string mensagem)
+    public void Cancelar(Usuario ator, string mensagem)
     {
+        VerificarSeADemandaEstahAtiva();
         if (UsuarioSolicitante.Id == ator.Id)
             Situacao = Situacoes.CanceladaPeloSolicitante;
         else if (UsuarioSolucionador is not null && UsuarioSolucionador.Id == ator.Id)
@@ -130,15 +149,17 @@ public class Demanda
             throw new UsuarioNaoAutorizadoException("O cancelamento de demandas é restrito ao solicitante da demanda, ao solucionador da demanda e aos gestores do departamento solucionador.");
 
         MomentoDeFechamento = DateTime.Now;
-        AlterarEventoRegistrado(mensagem);
+        AtualizarEventoRegistrado(mensagem);
     }
 
-    public Demanda Reabrir(Usuario.Usuario ator, string mensagem)
+    public Demanda Reabrir(Usuario ator, Usuario? solucionador, string mensagem)
     {
+        if (Situacao != Situacoes.Respondida && Situacao != Situacoes.CanceladaPeloSolucionador && Situacao != Situacoes.CanceladaPeloGestor)
+            throw new UsuarioNaoAutorizadoException("A demanda não foi respondida ou cancelada.");
         if (DepartamentoSolicitante != ator.Departamento)
             throw new UsuarioNaoAutorizadoException("A reabertura de demandas é restrita aos usuários do departamento solicitante.");
 
         string detalhes = $"Esta demanda é a reabertura da demanda {Id}. Motivo da reabertura: {mensagem}. Detalhes da demanda reaberta: {Detalhes}.";
-        return new Demanda(Atividade, ator, detalhes, Id);
+        return new Demanda(Atividade, ator, solucionador, detalhes, Id);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace TechChallenge.Dominio.EventoRegistrado;
+﻿using TechChallenge.Dominio.Entities;
+
+namespace TechChallenge.Dominio.Interfaces;
 
 public interface IEventoRegistradoRepository
 {

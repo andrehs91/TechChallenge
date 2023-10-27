@@ -1,6 +1,7 @@
 ﻿using TechChallenge.Aplicacao.DTO;
+using TechChallenge.Dominio.Entities;
 using TechChallenge.Dominio.Enums;
-using TechChallenge.Dominio.Usuario;
+using TechChallenge.Dominio.Interfaces;
 
 namespace TechChallenge.Aplicacao.Commands;
 

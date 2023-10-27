@@ -1,13 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TechChallenge.Dominio.Atividade;
+using System.Text.Json;
+using TechChallenge.Dominio.Entities;
 using TechChallenge.Dominio.Enums;
+using TechChallenge.Dominio.Interfaces;
 using TechChallenge.Infraestrutura.Data;
+using TechChallenge.Dominio.Policies;
 
 namespace TechChallenge.Infraestrutura.Repositories;
 
 public class AtividadeRepository : IAtividadeRepository
 {
     public ApplicationDbContext _context;
+
     public AtividadeRepository(ApplicationDbContext context)
     {
         _context = context;
@@ -21,7 +25,14 @@ public class AtividadeRepository : IAtividadeRepository
 
     public Atividade? BuscarPorId(int id)
     {
-        return _context.Atividades.Include(a => a.Solucionadores).Where(a => a.Id == id).FirstOrDefault();
+        return _context.Atividades.Find(id);
+    }
+
+    public Atividade? BuscarPorIdComSolucionadores(int id)
+    {
+        return _context.Atividades
+            .Include(a => a.Solucionadores)
+            .FirstOrDefault(a => a.Id == id);
     }
 
     public IList<Atividade> BuscarTodas()
@@ -49,5 +60,36 @@ public class AtividadeRepository : IAtividadeRepository
     {
         _context.Atividades.Remove(atividade);
         _context.SaveChanges();
+    }
+
+    public Usuario? IdentificarSolucionadorMenosAtarefado(int id)
+    {
+        var atividade = BuscarPorIdComSolucionadores(id);
+        if (atividade is null) return null;
+
+        var solucionadores = atividade.Solucionadores;
+        if (!solucionadores.Any()) return null;
+
+        var demandas = _context.Demandas
+            .Where(d => solucionadores.Select(s => s.Id).Contains(d.UsuarioSolucionadorId ?? -1))
+            .Select(d => new { d.UsuarioSolucionadorId, PrazoEstimado = (int)d.Prazo.Subtract(d.MomentoDeAbertura).TotalMinutes })
+            .ToList();
+
+        List<RankDTO> rank = new();
+        foreach (var solucionador in solucionadores)
+        {
+            rank.Add(new RankDTO()
+            {
+                Solucionador = solucionador,
+                PrazoEstimadoTotal = demandas.Where(d => d.UsuarioSolucionadorId == solucionador.Id).Sum(d => d.PrazoEstimado),
+                QuantidadeDeDemandas = demandas.Where(d => d.UsuarioSolucionadorId == solucionador.Id).Count(),
+            });
+        }
+
+        return rank
+            .OrderBy(r => r.PrazoEstimadoTotal)
+            .OrderBy(r => r.QuantidadeDeDemandas)
+            .First()
+            .Solucionador;
     }
 }

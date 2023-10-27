@@ -1,7 +1,6 @@
-﻿using TechChallenge.Dominio.Atividade;
-using TechChallenge.Dominio.Demanda;
+﻿using TechChallenge.Dominio.Entities;
 using TechChallenge.Dominio.Exceptions;
-using TechChallenge.Dominio.Usuario;
+using TechChallenge.Dominio.Interfaces;
 
 namespace TechChallenge.Aplicacao.Commands;
 
@@ -10,25 +9,28 @@ public class DemandaCommand
     private readonly IAtividadeRepository _repositorioDeAtividades;
     private readonly IDemandaRepository _repositorioDeDemandas;
     private readonly IUsuarioRepository _repositorioDeUsuarios;
+    private readonly ISolucionadorPolicy _politicaSobreSolucionador;
 
-    public DemandaCommand(IAtividadeRepository repositorioDeAtividades, IDemandaRepository repositorioDeDemandas, IUsuarioRepository repositorioDeUsuarios)
+    public DemandaCommand(IAtividadeRepository repositorioDeAtividades, IDemandaRepository repositorioDeDemandas, IUsuarioRepository repositorioDeUsuarios, ISolucionadorPolicy politicaSobreSolucionador)
     {
         _repositorioDeAtividades = repositorioDeAtividades;
         _repositorioDeDemandas = repositorioDeDemandas;
         _repositorioDeUsuarios = repositorioDeUsuarios;
+        _politicaSobreSolucionador = politicaSobreSolucionador;
     }
 
     public Demanda AbrirDemanda(Usuario ator, int id, string detalhes)
     {
-        var atividade = _repositorioDeAtividades.BuscarPorId(id) ?? throw new AtividadeNaoEncontradaException();
-        Demanda demanda = new( atividade, ator, detalhes );
+        var atividade = _repositorioDeAtividades.BuscarPorId(id) ?? throw new EntidadeNaoEncontradaException("Atividade não encontrada.");
+        var solucionador = _politicaSobreSolucionador.IdentificarSolucionadorMenosAtarefado(atividade);
+        Demanda demanda = new( atividade, ator, solucionador, detalhes);
         _repositorioDeDemandas.Criar(demanda);
-        return demanda;
+        return _repositorioDeDemandas.BuscarPorId(demanda.Id)!;
     }
 
     public Demanda ConsultarDemanda(int id)
     {
-        return _repositorioDeDemandas.BuscarPorId(id) ?? throw new DemandaNaoEncontradaException();
+        return _repositorioDeDemandas.BuscarPorId(id) ?? throw new EntidadeNaoEncontradaException("Demanda não encontrada.");
     }
 
     internal IList<Demanda> ListarDemandasDoSolicitante(Usuario usuario)
@@ -53,7 +55,7 @@ public class DemandaCommand
 
     public void EncaminharDemanda(Usuario ator, int id, int idNovoSolucionador, string mensagem)
     {
-        var novoSolucionador = _repositorioDeUsuarios.BuscarPorId(idNovoSolucionador) ?? throw new UsuarioNaoEncontradoException();
+        var novoSolucionador = _repositorioDeUsuarios.BuscarPorId(idNovoSolucionador) ?? throw new EntidadeNaoEncontradaException("Usuário não encontrado.");
         var demanda = ConsultarDemanda(id);
         demanda.Encaminhar(ator, novoSolucionador, mensagem);
         _repositorioDeDemandas.Editar(demanda);
@@ -90,7 +92,8 @@ public class DemandaCommand
     public Demanda ReabrirDemanda(Usuario ator, int id, string mensagem)
     {
         var demanda = ConsultarDemanda(id);
-        Demanda novaDemanda = demanda.Reabrir(ator, mensagem);
+        var solucionador = _politicaSobreSolucionador.IdentificarSolucionadorMenosAtarefado(demanda.Atividade);
+        Demanda novaDemanda = demanda.Reabrir(ator, solucionador, mensagem);
         _repositorioDeDemandas.Criar(novaDemanda);
         return novaDemanda;
     }

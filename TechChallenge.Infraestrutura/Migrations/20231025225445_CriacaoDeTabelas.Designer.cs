@@ -12,8 +12,8 @@ using TechChallenge.Infraestrutura.Data;
 namespace TechChallenge.Infraestrutura.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231024135534_AlteracoesNoRegistroDeEventos")]
-    partial class AlteracoesNoRegistroDeEventos
+    [Migration("20231025225445_CriacaoDeTabelas")]
+    partial class CriacaoDeTabelas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace TechChallenge.Infraestrutura.Migrations
                     b.ToTable("Solucionadores", "App");
                 });
 
-            modelBuilder.Entity("TechChallenge.Dominio.Atividade.Atividade", b =>
+            modelBuilder.Entity("TechChallenge.Dominio.Entities.Atividade", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,7 +77,7 @@ namespace TechChallenge.Infraestrutura.Migrations
                     b.ToTable("Atividades", "App");
                 });
 
-            modelBuilder.Entity("TechChallenge.Dominio.Demanda.Demanda", b =>
+            modelBuilder.Entity("TechChallenge.Dominio.Entities.Demanda", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,7 +130,7 @@ namespace TechChallenge.Infraestrutura.Migrations
                     b.ToTable("Demandas", "App");
                 });
 
-            modelBuilder.Entity("TechChallenge.Dominio.EventoRegistrado.EventoRegistrado", b =>
+            modelBuilder.Entity("TechChallenge.Dominio.Entities.EventoRegistrado", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,7 +142,6 @@ namespace TechChallenge.Infraestrutura.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Mensagem")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("MomentoFinal")
@@ -166,7 +165,7 @@ namespace TechChallenge.Infraestrutura.Migrations
                     b.ToTable("EventosRegistrados", "App");
                 });
 
-            modelBuilder.Entity("TechChallenge.Dominio.Usuario.Usuario", b =>
+            modelBuilder.Entity("TechChallenge.Dominio.Entities.Usuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,34 +194,34 @@ namespace TechChallenge.Infraestrutura.Migrations
 
             modelBuilder.Entity("Solucionadores", b =>
                 {
-                    b.HasOne("TechChallenge.Dominio.Atividade.Atividade", null)
+                    b.HasOne("TechChallenge.Dominio.Entities.Atividade", null)
                         .WithMany()
                         .HasForeignKey("AtividadesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechChallenge.Dominio.Usuario.Usuario", null)
+                    b.HasOne("TechChallenge.Dominio.Entities.Usuario", null)
                         .WithMany()
                         .HasForeignKey("SolucionadoresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TechChallenge.Dominio.Demanda.Demanda", b =>
+            modelBuilder.Entity("TechChallenge.Dominio.Entities.Demanda", b =>
                 {
-                    b.HasOne("TechChallenge.Dominio.Atividade.Atividade", "Atividade")
+                    b.HasOne("TechChallenge.Dominio.Entities.Atividade", "Atividade")
                         .WithMany("Demandas")
                         .HasForeignKey("AtividadeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechChallenge.Dominio.Usuario.Usuario", "UsuarioSolicitante")
+                    b.HasOne("TechChallenge.Dominio.Entities.Usuario", "UsuarioSolicitante")
                         .WithMany()
                         .HasForeignKey("UsuarioSolicitanteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechChallenge.Dominio.Usuario.Usuario", "UsuarioSolucionador")
+                    b.HasOne("TechChallenge.Dominio.Entities.Usuario", "UsuarioSolucionador")
                         .WithMany()
                         .HasForeignKey("UsuarioSolucionadorId");
 
@@ -233,15 +232,15 @@ namespace TechChallenge.Infraestrutura.Migrations
                     b.Navigation("UsuarioSolucionador");
                 });
 
-            modelBuilder.Entity("TechChallenge.Dominio.EventoRegistrado.EventoRegistrado", b =>
+            modelBuilder.Entity("TechChallenge.Dominio.Entities.EventoRegistrado", b =>
                 {
-                    b.HasOne("TechChallenge.Dominio.Demanda.Demanda", "Demanda")
+                    b.HasOne("TechChallenge.Dominio.Entities.Demanda", "Demanda")
                         .WithMany("EventosRegistrados")
                         .HasForeignKey("DemandaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechChallenge.Dominio.Usuario.Usuario", "UsuarioSolucionador")
+                    b.HasOne("TechChallenge.Dominio.Entities.Usuario", "UsuarioSolucionador")
                         .WithMany()
                         .HasForeignKey("UsuarioSolucionadorId");
 
@@ -250,12 +249,12 @@ namespace TechChallenge.Infraestrutura.Migrations
                     b.Navigation("UsuarioSolucionador");
                 });
 
-            modelBuilder.Entity("TechChallenge.Dominio.Atividade.Atividade", b =>
+            modelBuilder.Entity("TechChallenge.Dominio.Entities.Atividade", b =>
                 {
                     b.Navigation("Demandas");
                 });
 
-            modelBuilder.Entity("TechChallenge.Dominio.Demanda.Demanda", b =>
+            modelBuilder.Entity("TechChallenge.Dominio.Entities.Demanda", b =>
                 {
                     b.Navigation("EventosRegistrados");
                 });

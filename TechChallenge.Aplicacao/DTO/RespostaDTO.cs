@@ -1,8 +1,10 @@
-﻿namespace TechChallenge.Aplicacao.DTO;
+﻿using System.Text.Json.Serialization;
+
+namespace TechChallenge.Aplicacao.DTO;
 
 public class RespostaDTO
 {
-    public Tipos Tipo { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))] public Tipos Tipo { get; set; }
     public string Mensagem { get; set; }
 
     public RespostaDTO(Tipos tipo, string mensagem)

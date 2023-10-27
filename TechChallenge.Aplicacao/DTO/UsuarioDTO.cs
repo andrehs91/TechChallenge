@@ -1,5 +1,6 @@
-﻿using TechChallenge.Dominio.Enums;
-using TechChallenge.Dominio.Usuario;
+﻿using System.Text.Json.Serialization;
+using TechChallenge.Dominio.Entities;
+using TechChallenge.Dominio.Enums;
 
 namespace TechChallenge.Aplicacao.DTO;
 
@@ -8,8 +9,8 @@ public class UsuarioDTO
     public int Id { get; set; }
     public string? Matricula { get; set; }
     public string? Nome { get; set; }
-    public Departamentos Departamento { get; set; }
-    public Funcoes Funcao { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))] public Departamentos Departamento { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))] public Funcoes Funcao { get; set; }
 
     public UsuarioDTO(Usuario usuario)
     {

@@ -24,7 +24,7 @@ namespace TechChallenge.Infraestrutura.Migrations
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EstahAtiva = table.Column<bool>(type: "bit", nullable: false),
-                    DepartamentoResponsavel = table.Column<int>(type: "int", nullable: false),
+                    DepartamentoSolucionador = table.Column<int>(type: "int", nullable: false),
                     TipoDeDistribuicao = table.Column<int>(type: "int", nullable: false),
                     Prioridade = table.Column<int>(type: "int", nullable: false),
                     PrazoEstimado = table.Column<int>(type: "int", nullable: false)
@@ -66,8 +66,8 @@ namespace TechChallenge.Infraestrutura.Migrations
                     Situacao = table.Column<int>(type: "int", nullable: false),
                     DepartamentoSolicitante = table.Column<int>(type: "int", nullable: false),
                     UsuarioSolicitanteId = table.Column<int>(type: "int", nullable: false),
-                    DepartamentoResponsavel = table.Column<int>(type: "int", nullable: false),
-                    UsuarioResponsavelId = table.Column<int>(type: "int", nullable: true),
+                    DepartamentoSolucionador = table.Column<int>(type: "int", nullable: false),
+                    UsuarioSolucionadorId = table.Column<int>(type: "int", nullable: true),
                     Detalhes = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -81,18 +81,18 @@ namespace TechChallenge.Infraestrutura.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Demandas_Usuarios_UsuarioResponsavelId",
-                        column: x => x.UsuarioResponsavelId,
-                        principalSchema: "App",
-                        principalTable: "Usuarios",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Demandas_Usuarios_UsuarioSolicitanteId",
                         column: x => x.UsuarioSolicitanteId,
                         principalSchema: "App",
                         principalTable: "Usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Demandas_Usuarios_UsuarioSolucionadorId",
+                        column: x => x.UsuarioSolucionadorId,
+                        principalSchema: "App",
+                        principalTable: "Usuarios",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -130,12 +130,11 @@ namespace TechChallenge.Infraestrutura.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DemandaId = table.Column<int>(type: "int", nullable: false),
-                    DepartamentoResponsavel = table.Column<int>(type: "int", nullable: false),
-                    UsuarioResponsavelId = table.Column<int>(type: "int", nullable: true),
+                    UsuarioSolucionadorId = table.Column<int>(type: "int", nullable: true),
                     Situacao = table.Column<int>(type: "int", nullable: false),
                     MomentoInicial = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MomentoFinal = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Mensagem = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Mensagem = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -148,8 +147,8 @@ namespace TechChallenge.Infraestrutura.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EventosRegistrados_Usuarios_UsuarioResponsavelId",
-                        column: x => x.UsuarioResponsavelId,
+                        name: "FK_EventosRegistrados_Usuarios_UsuarioSolucionadorId",
+                        column: x => x.UsuarioSolucionadorId,
                         principalSchema: "App",
                         principalTable: "Usuarios",
                         principalColumn: "Id");
@@ -162,16 +161,16 @@ namespace TechChallenge.Infraestrutura.Migrations
                 column: "AtividadeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Demandas_UsuarioResponsavelId",
-                schema: "App",
-                table: "Demandas",
-                column: "UsuarioResponsavelId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Demandas_UsuarioSolicitanteId",
                 schema: "App",
                 table: "Demandas",
                 column: "UsuarioSolicitanteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Demandas_UsuarioSolucionadorId",
+                schema: "App",
+                table: "Demandas",
+                column: "UsuarioSolucionadorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventosRegistrados_DemandaId",
@@ -180,10 +179,10 @@ namespace TechChallenge.Infraestrutura.Migrations
                 column: "DemandaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EventosRegistrados_UsuarioResponsavelId",
+                name: "IX_EventosRegistrados_UsuarioSolucionadorId",
                 schema: "App",
                 table: "EventosRegistrados",
-                column: "UsuarioResponsavelId");
+                column: "UsuarioSolucionadorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Solucionadores_SolucionadoresId",

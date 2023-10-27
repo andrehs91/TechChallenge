@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TechChallenge.Dominio.Demanda;
+using TechChallenge.Dominio.Entities;
 using TechChallenge.Dominio.Enums;
+using TechChallenge.Dominio.Interfaces;
 using TechChallenge.Infraestrutura.Data;
 
 namespace TechChallenge.Infraestrutura.Repositories;
@@ -8,6 +9,7 @@ namespace TechChallenge.Infraestrutura.Repositories;
 public class DemandaRepository : IDemandaRepository
 {
     public ApplicationDbContext _context;
+
     public DemandaRepository(ApplicationDbContext context)
     {
         _context = context;
@@ -22,7 +24,9 @@ public class DemandaRepository : IDemandaRepository
     public Demanda? BuscarPorId(int id)
     {
         return _context.Demandas
+            .Include(d => d.Atividade)
             .Include(d => d.EventosRegistrados)
+                .ThenInclude(er => er.UsuarioSolucionador)
             .Include(d => d.UsuarioSolicitante)
             .Include(d => d.UsuarioSolucionador)
             .Where(d => d.Id == id)
@@ -37,7 +41,12 @@ public class DemandaRepository : IDemandaRepository
     public IList<Demanda> BuscarPorSolicitante(int idSolicitante)
     {
         return _context.Demandas
-            .Where(d => d.UsuarioSolicitante.Id == idSolicitante)
+            .Include(d => d.Atividade)
+            .Include(d => d.EventosRegistrados)
+                .ThenInclude(er => er.UsuarioSolucionador)
+            .Include(d => d.UsuarioSolicitante)
+            .Include(d => d.UsuarioSolucionador)
+            .Where(d => d.UsuarioSolicitanteId == idSolicitante)
             .AsNoTracking()
             .ToList();
     }
@@ -45,6 +54,11 @@ public class DemandaRepository : IDemandaRepository
     public IList<Demanda> BuscarPorDepartamentoSolicitante(Departamentos departamento)
     {
         return _context.Demandas
+            .Include(d => d.Atividade)
+            .Include(d => d.EventosRegistrados)
+                .ThenInclude(er => er.UsuarioSolucionador)
+            .Include(d => d.UsuarioSolicitante)
+            .Include(d => d.UsuarioSolucionador)
             .Where(d => d.DepartamentoSolicitante == departamento)
             .AsNoTracking()
             .ToList();
@@ -53,7 +67,12 @@ public class DemandaRepository : IDemandaRepository
     public IList<Demanda> BuscarPorSolucionador(int idSolucionador)
     {
         return _context.Demandas
-            .Where(d => d.UsuarioSolucionador != null && d.UsuarioSolucionador.Id == idSolucionador)
+            .Include(d => d.Atividade)
+            .Include(d => d.EventosRegistrados)
+                .ThenInclude(er => er.UsuarioSolucionador)
+            .Include(d => d.UsuarioSolicitante)
+            .Include(d => d.UsuarioSolucionador)
+            .Where(d => d.UsuarioSolucionadorId != null && d.UsuarioSolucionadorId == idSolucionador)
             .AsNoTracking()
             .ToList();
     }
@@ -61,6 +80,11 @@ public class DemandaRepository : IDemandaRepository
     public IList<Demanda> BuscarPorDepartamentoSolucionador(Departamentos departamento)
     {
         return _context.Demandas
+            .Include(d => d.Atividade)
+            .Include(d => d.EventosRegistrados)
+                .ThenInclude(er => er.UsuarioSolucionador)
+            .Include(d => d.UsuarioSolicitante)
+            .Include(d => d.UsuarioSolucionador)
             .Where(d => d.DepartamentoSolucionador == departamento)
             .AsNoTracking()
             .ToList();

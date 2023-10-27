@@ -1,4 +1,4 @@
-﻿using TechChallenge.Dominio.Usuario;
+﻿using TechChallenge.Dominio.Entities;
 
 namespace TechChallenge.Aplicacao.Services;
 

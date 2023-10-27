@@ -1,6 +1,6 @@
 ﻿using TechChallenge.Dominio.Enums;
 
-namespace TechChallenge.Dominio.Atividade;
+namespace TechChallenge.Dominio.Entities;
 
 public class Atividade
 {
@@ -12,8 +12,8 @@ public class Atividade
     public TiposDeDistribuicao TipoDeDistribuicao { get; set; }
     public Prioridades Prioridade { get; set; }
     public int PrazoEstimado { get; set; }
-    public virtual List<Usuario.Usuario> Solucionadores { get; } = new();
-    public virtual List<Demanda.Demanda> Demandas { get; set; } = new();
+    public virtual List<Usuario> Solucionadores { get; } = new();
+    public virtual List<Demanda> Demandas { get; set; } = new();
 
     public Atividade() { }
 

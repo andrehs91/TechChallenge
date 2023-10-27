@@ -1,6 +1,7 @@
-﻿using TechChallenge.Dominio.Enums;
+﻿using TechChallenge.Dominio.Entities;
+using TechChallenge.Dominio.Enums;
 
-namespace TechChallenge.Dominio.Demanda;
+namespace TechChallenge.Dominio.Interfaces;
 
 public interface IDemandaRepository
 {

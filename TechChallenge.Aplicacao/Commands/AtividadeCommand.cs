@@ -1,8 +1,8 @@
 ﻿using TechChallenge.Aplicacao.DTO;
-using TechChallenge.Dominio.Atividade;
+using TechChallenge.Dominio.Entities;
 using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Exceptions;
-using TechChallenge.Dominio.Usuario;
+using TechChallenge.Dominio.Interfaces;
 
 namespace TechChallenge.Aplicacao.Commands;
 
@@ -21,12 +21,20 @@ public class AtividadeCommand
     {
         if (usuario.Funcao != Funcoes.Gestor ||
             usuario.Departamento != atividade.DepartamentoSolucionador)
-            throw new UsuarioNaoAutorizadoException();
+            throw new UsuarioNaoAutorizadoException("Usuário não autorizado.");
     }
 
     public Atividade CriarAtividade(Usuario usuario, AtividadeDTO atividadeDTO)
     {
-        Atividade atividade = AtividadeDTO.DTOParaEntidade(atividadeDTO);
+        Atividade atividade = new(
+            atividadeDTO.Nome,
+            atividadeDTO.Descricao,
+            atividadeDTO.EstahAtiva,
+            atividadeDTO.DepartamentoSolucionador,
+            atividadeDTO.TipoDeDistribuicao,
+            atividadeDTO.Prioridade,
+            atividadeDTO.PrazoEstimado
+        );
 
         VerificarSeUsuarioEstahAutorizado(usuario, atividade);
 
@@ -88,7 +96,7 @@ public class AtividadeCommand
 
     public RespostaDTO DefinirSolucionadores(Usuario usuario, IdsDosUsuariosDTO idsDosUsuariosDTO, int id)
     {
-        var atividade = _repositorioDeAtividades.BuscarPorId(id);
+        var atividade = _repositorioDeAtividades.BuscarPorIdComSolucionadores(id);
 
         if (atividade is null) return new RespostaDTO(RespostaDTO.Tipos.Aviso, "Atividade não encontrada.");
         if (atividade.DepartamentoSolucionador != usuario.Departamento) return new RespostaDTO(RespostaDTO.Tipos.Erro, "A atividade não é de responsabilidade do teu departamento.");

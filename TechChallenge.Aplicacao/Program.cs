@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 using TechChallenge.Aplicacao.Commands;
 using TechChallenge.Aplicacao.Configurations;
 using TechChallenge.Aplicacao.Services;
-using TechChallenge.Dominio.Atividade;
-using TechChallenge.Dominio.Demanda;
-using TechChallenge.Dominio.Usuario;
+using TechChallenge.Aplicacaoptions.Configurations;
+using TechChallenge.Dominio.Interfaces;
+using TechChallenge.Dominio.Policies;
 using TechChallenge.Infraestrutura.Data;
 using TechChallenge.Infraestrutura.Repositories;
 
@@ -19,9 +18,12 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAtividadeRepository, AtividadeRepository>();
 builder.Services.AddScoped<IDemandaRepository, DemandaRepository>();
+builder.Services.AddScoped<ISolucionadorPolicy, SolucionadorPolicy>();
 builder.Services.AddScoped<UsuarioCommand>();
 builder.Services.AddScoped<AtividadeCommand>();
 builder.Services.AddScoped<DemandaCommand>();
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(o =>
 {
     o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,43 +45,11 @@ builder.Services.AddAuthentication(o =>
         OnForbidden = context => Handlers.OnForbiddenHandler(context)
     };
 });
-builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(o =>
-{
-    o.SwaggerDoc("v1", new OpenApiInfo { Title = "API Tech Challenge", Version = "v1" });
-    o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization Header: Bearer token",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT"
-    });
-    o.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
+builder.Services.AddSwaggerGen(options => Options.SwaggerGenOptions(options));
 
 var app = builder.Build();
 
-app.UseExceptionHandler(new ExceptionHandlerOptions
-{
-    ExceptionHandler = Handlers.ExceptionHandler,
-    AllowStatusCode404Response = true,
-});
+app.UseExceptionHandler(Options.ExceptionHandlerOptions());
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

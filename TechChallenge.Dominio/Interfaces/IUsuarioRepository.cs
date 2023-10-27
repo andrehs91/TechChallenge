@@ -1,6 +1,7 @@
-﻿using TechChallenge.Dominio.Enums;
+﻿using TechChallenge.Dominio.Entities;
+using TechChallenge.Dominio.Enums;
 
-namespace TechChallenge.Dominio.Usuario;
+namespace TechChallenge.Dominio.Interfaces;
 
 public interface IUsuarioRepository
 {

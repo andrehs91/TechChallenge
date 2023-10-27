@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TechChallenge.Dominio.Usuario;
+using TechChallenge.Dominio.Entities;
 
 namespace TechChallenge.Aplicacao.Services;
 
@@ -21,6 +21,7 @@ public class TokenService : ITokenService
         {
             new Claim(ClaimTypes.Name, usuario.Matricula),
             new Claim(ClaimTypes.Role, usuario.Funcao.ToString()),
+            new Claim("Id", usuario.Id.ToString()),
             new Claim("Matricula", usuario.Matricula),
             new Claim("Nome", usuario.Nome),
             new Claim("Departamento", usuario.Departamento.ToString()),

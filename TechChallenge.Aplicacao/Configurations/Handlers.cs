@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using TechChallenge.Dominio.Exceptions;
-using Microsoft.IdentityModel.Tokens;
 
 namespace TechChallenge.Aplicacao.Configurations;
 
@@ -55,30 +54,20 @@ public static class Handlers
             if (exceptionHandlerFeature is not null)
             {
                 var exception = exceptionHandlerFeature.Error;
-                if (exception is ModeloInvalidoException)
+                if (exception is DadosInvalidosException)
                 {
                     statusCode = 400;
-                    resposta = new(RespostaDTO.Tipos.Aviso, SetExceptionMessage(exception, "Os dados enviados na requisição não atendem aos requisitos do sistema."));
+                    resposta = new(RespostaDTO.Tipos.Aviso, exception.Message.ToString());
                 }
                 else if (exception is UsuarioNaoAutorizadoException)
                 {
                     statusCode = 403;
-                    resposta = new(RespostaDTO.Tipos.Erro, SetExceptionMessage(exception, "Usuário não autorizado."));
+                    resposta = new(RespostaDTO.Tipos.Erro, exception.Message.ToString());
                 }
-                else if (exception is AtividadeNaoEncontradaException)
+                else if (exception is EntidadeNaoEncontradaException)
                 {
-                    statusCode = 403;
-                    resposta = new(RespostaDTO.Tipos.Aviso, SetExceptionMessage(exception, "Atividade não encontrada."));
-                }
-                else if (exception is DemandaNaoEncontradaException)
-                {
-                    statusCode = 403;
-                    resposta = new(RespostaDTO.Tipos.Aviso, SetExceptionMessage(exception, "Demanda não encontrada."));
-                }
-                else if (exception is UsuarioNaoEncontradoException)
-                {
-                    statusCode = 403;
-                    resposta = new(RespostaDTO.Tipos.Aviso, SetExceptionMessage(exception, "Usuário não encontrado."));
+                    statusCode = 404;
+                    resposta = new(RespostaDTO.Tipos.Aviso, exception.Message.ToString());
                 }
             }
             context.Response.StatusCode = statusCode;
@@ -90,12 +79,5 @@ public static class Handlers
             );
         });
         return Task.CompletedTask;
-    }
-
-    private static string SetExceptionMessage(Exception exception, string defaultMessage)
-    {
-        var message = exception.Message.ToString();
-        if (message.IsNullOrEmpty()) return defaultMessage;
-        return message;
     }
 }

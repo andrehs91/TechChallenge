@@ -1,5 +1,6 @@
-﻿using TechChallenge.Dominio.Enums;
-using TechChallenge.Dominio.Usuario;
+﻿using TechChallenge.Dominio.Entities;
+using TechChallenge.Dominio.Enums;
+using TechChallenge.Dominio.Interfaces;
 using TechChallenge.Infraestrutura.Data;
 
 namespace TechChallenge.Infraestrutura.Repositories;

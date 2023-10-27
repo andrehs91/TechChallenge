@@ -1,6 +1,6 @@
 ﻿using TechChallenge.Dominio.Enums;
 
-namespace TechChallenge.Dominio.Usuario;
+namespace TechChallenge.Dominio.Entities;
 
 public class Usuario : IEquatable<Usuario>
 {
@@ -9,7 +9,7 @@ public class Usuario : IEquatable<Usuario>
     public string Nome { get; set; }
     public Departamentos Departamento { get; set; }
     public Funcoes Funcao { get; set; }
-    public virtual List<Atividade.Atividade> Atividades { get; } = new();
+    public virtual List<Atividade> Atividades { get; } = new();
 
     public Usuario() { }
 

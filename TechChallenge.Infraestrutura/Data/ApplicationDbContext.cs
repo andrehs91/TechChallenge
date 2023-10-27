@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TechChallenge.Dominio.Usuario;
-using TechChallenge.Dominio.Atividade;
-using TechChallenge.Dominio.Demanda;
-using TechChallenge.Dominio.EventoRegistrado;
 using Microsoft.Extensions.Configuration;
+using TechChallenge.Dominio.Entities;
 
 namespace TechChallenge.Infraestrutura.Data;
 
