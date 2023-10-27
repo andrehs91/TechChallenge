@@ -18,7 +18,7 @@ public static class Handlers
             await context.Response.WriteAsync(
                 Encoding.UTF8.GetString(
                     JsonSerializer.SerializeToUtf8Bytes(
-                        new RespostaDTO(RespostaDTO.Tipos.Erro, "Token inválido.")
+                        new RespostaDTO(RespostaDTO.TiposDeResposta.Erro, "Token inválido.")
                     )
                 )
             );
@@ -35,7 +35,7 @@ public static class Handlers
             await context.Response.WriteAsync(
                 Encoding.UTF8.GetString(
                     JsonSerializer.SerializeToUtf8Bytes(
-                        new RespostaDTO(RespostaDTO.Tipos.Erro, "Usuário não autorizado.")
+                        new RespostaDTO(RespostaDTO.TiposDeResposta.Erro, "Usuário não autorizado.")
                     )
                 )
             );
@@ -48,7 +48,7 @@ public static class Handlers
         context.Response.OnStarting(async () =>
         {
             int statusCode = 500;
-            RespostaDTO resposta = new(RespostaDTO.Tipos.Erro, "Erro interno do servidor.");
+            RespostaDTO resposta = new(RespostaDTO.TiposDeResposta.Erro, "Erro interno do servidor.");
 
             var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
             if (exceptionHandlerFeature is not null)
@@ -57,17 +57,17 @@ public static class Handlers
                 if (exception is DadosInvalidosException)
                 {
                     statusCode = 400;
-                    resposta = new(RespostaDTO.Tipos.Aviso, exception.Message.ToString());
+                    resposta = new(RespostaDTO.TiposDeResposta.Aviso, exception.Message.ToString());
                 }
                 else if (exception is UsuarioNaoAutorizadoException)
                 {
                     statusCode = 403;
-                    resposta = new(RespostaDTO.Tipos.Erro, exception.Message.ToString());
+                    resposta = new(RespostaDTO.TiposDeResposta.Erro, exception.Message.ToString());
                 }
                 else if (exception is EntidadeNaoEncontradaException)
                 {
                     statusCode = 404;
-                    resposta = new(RespostaDTO.Tipos.Aviso, exception.Message.ToString());
+                    resposta = new(RespostaDTO.TiposDeResposta.Aviso, exception.Message.ToString());
                 }
             }
             context.Response.StatusCode = statusCode;

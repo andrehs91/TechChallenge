@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 using TechChallenge.Dominio.Entities;
-using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Interfaces;
 using TechChallenge.Infraestrutura.Data;
 using TechChallenge.Dominio.Policies;
@@ -45,7 +43,7 @@ public class AtividadeRepository : IAtividadeRepository
         return _context.Atividades.Where(a => a.EstahAtiva).ToList();
     }
 
-    public IList<Atividade> BuscarPorDepartamentoSolucionador(Departamentos departamento)
+    public IList<Atividade> BuscarPorDepartamentoSolucionador(string departamento)
     {
         return _context.Atividades.Where(a => a.DepartamentoSolucionador == departamento).ToList();
     }

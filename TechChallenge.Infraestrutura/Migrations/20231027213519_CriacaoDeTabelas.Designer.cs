@@ -12,7 +12,7 @@ using TechChallenge.Infraestrutura.Data;
 namespace TechChallenge.Infraestrutura.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231025225445_CriacaoDeTabelas")]
+    [Migration("20231027213519_CriacaoDeTabelas")]
     partial class CriacaoDeTabelas
     {
         /// <inheritdoc />
@@ -49,8 +49,9 @@ namespace TechChallenge.Infraestrutura.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DepartamentoSolucionador")
-                        .HasColumnType("int");
+                    b.Property<string>("DepartamentoSolucionador")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -88,11 +89,13 @@ namespace TechChallenge.Infraestrutura.Migrations
                     b.Property<int>("AtividadeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DepartamentoSolicitante")
-                        .HasColumnType("int");
+                    b.Property<string>("DepartamentoSolicitante")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DepartamentoSolucionador")
-                        .HasColumnType("int");
+                    b.Property<string>("DepartamentoSolucionador")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Detalhes")
                         .IsRequired()
@@ -173,11 +176,12 @@ namespace TechChallenge.Infraestrutura.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Departamento")
-                        .HasColumnType("int");
+                    b.Property<string>("Departamento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Funcao")
-                        .HasColumnType("int");
+                    b.Property<bool>("EhGestor")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Matricula")
                         .IsRequired()

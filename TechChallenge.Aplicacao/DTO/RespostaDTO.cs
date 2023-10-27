@@ -4,16 +4,16 @@ namespace TechChallenge.Aplicacao.DTO;
 
 public class RespostaDTO
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))] public Tipos Tipo { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))] public TiposDeResposta Tipo { get; set; }
     public string Mensagem { get; set; }
 
-    public RespostaDTO(Tipos tipo, string mensagem)
+    public RespostaDTO(TiposDeResposta tipo, string mensagem)
     {
         Tipo = tipo;
         Mensagem = mensagem;
     }
 
-    public enum Tipos
+    public enum TiposDeResposta
     {
         Erro, Aviso, Sucesso
     }

@@ -71,7 +71,7 @@ public class AtividadeController : BaseController
     {
         return _comandos.ConsultarAtividade(id) is Atividade atividade
             ? Ok(new AtividadeDTO(atividade))
-            : NotFound(new RespostaDTO(RespostaDTO.Tipos.Aviso, "Atividade não encontrada."));
+            : NotFound(new RespostaDTO(RespostaDTO.TiposDeResposta.Aviso, "Atividade não encontrada."));
     }
 
     /// <summary>
@@ -165,8 +165,8 @@ public class AtividadeController : BaseController
     public ActionResult<RespostaDTO> DefinirSolucionadores(int id, [FromBody] IdsDosUsuariosDTO idsDosUsuariosDTO)
     {
         RespostaDTO resposta = _comandos.DefinirSolucionadores(ObterUsuarioAutenticado(), idsDosUsuariosDTO, id);
-        if (resposta.Tipo == RespostaDTO.Tipos.Erro) return BadRequest(resposta);
-        if (resposta.Tipo == RespostaDTO.Tipos.Aviso) return NotFound(resposta);
+        if (resposta.Tipo == RespostaDTO.TiposDeResposta.Erro) return BadRequest(resposta);
+        if (resposta.Tipo == RespostaDTO.TiposDeResposta.Aviso) return NotFound(resposta);
         return Ok(resposta);
     }
 }

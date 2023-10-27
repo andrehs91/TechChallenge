@@ -14,10 +14,10 @@ public class Demanda
     public DateTime? MomentoDeFechamento { get; set; } = null;
     public DateTime Prazo { get; set; }
     public Situacoes Situacao { get; set; }
-    public Departamentos DepartamentoSolicitante { get; set; }
+    public string DepartamentoSolicitante { get; set; }
     public int UsuarioSolicitanteId { get; set; }
     public Usuario UsuarioSolicitante { get; set; }
-    public Departamentos DepartamentoSolucionador { get; set; }
+    public string DepartamentoSolucionador { get; set; }
     public int? UsuarioSolucionadorId { get; set; }
     public Usuario? UsuarioSolucionador { get; set; }
     public string Detalhes { get; set; } = string.Empty;
@@ -45,15 +45,15 @@ public class Demanda
         UsuarioSolucionadorId = solucionador?.Id;
         Detalhes = detalhes;
 
-        RegistrarEvento();
+        RegistrarEvento(solucionador);
     }
 
-    private void RegistrarEvento()
+    private void RegistrarEvento(Usuario? solucionador = null)
     {
         EventosRegistrados.Add(new EventoRegistrado()
         {
             Demanda = this,
-            UsuarioSolucionador = UsuarioSolucionador,
+            UsuarioSolucionador = solucionador ?? UsuarioSolucionador,
             Situacao = Situacao,
             MomentoInicial = DateTime.Now
         });
@@ -71,7 +71,7 @@ public class Demanda
     private void VerificarSeADemandaEstahAtiva()
     {
         if (Situacao != Situacoes.AguardandoDistribuicao && Situacao != Situacoes.EmAtendimento)
-            throw new UsuarioNaoAutorizadoException("A demanda não está na situação 'Aguardando Distribuição' e nem na situação 'Em Atendimento'.");
+            throw new UsuarioNaoAutorizadoException("Esta demanda não está na situação 'Aguardando Distribuição' e nem na situação 'Em Atendimento'.");
     }
 
     public void Encaminhar(Usuario ator, Usuario novoSolucionador, string mensagem)
@@ -79,15 +79,17 @@ public class Demanda
         VerificarSeADemandaEstahAtiva();
         if (UsuarioSolucionador is not null && UsuarioSolucionador.Id == ator.Id)
         {
-            if (ator.Id == novoSolucionador.Id) throw new UsuarioNaoAutorizadoException("O usuário já é o solucionador da demanda.");
+            if (ator.Id == novoSolucionador.Id) throw new UsuarioNaoAutorizadoException("O usuário já é o solucionador desta demanda.");
             Situacao = Situacoes.EncaminhadaPeloSolucionador;
         }
-        else if (DepartamentoSolucionador == ator.Departamento && ator.Funcao == Funcoes.Gestor)
+        else if (DepartamentoSolucionador == ator.Departamento && ator.EhGestor == true)
             Situacao = Situacoes.EncaminhadaPeloGestor;
         else
             throw new UsuarioNaoAutorizadoException("O encaminhamento de demandas é restrito ao solucionador da demanda e aos gestores do departamento solucionador.");
 
-        AtualizarEventoRegistrado(mensagem);
+        string complemento = $"Demanda encaminhada para ({novoSolucionador.Matricula}) {novoSolucionador.Nome}.";
+        if (Situacao == Situacoes.EncaminhadaPeloGestor) complemento += $" Gestor responsável pela ação: ({ator.Matricula}) {ator.Nome}. ";
+        AtualizarEventoRegistrado(complemento + mensagem);
 
         UsuarioSolucionador = novoSolucionador;
         Situacao = Situacoes.EmAtendimento;
@@ -97,13 +99,13 @@ public class Demanda
     public void Capturar(Usuario ator)
     {
         VerificarSeADemandaEstahAtiva();
-        if (UsuarioSolucionador is not null && UsuarioSolucionador.Id != ator.Id)
-            throw new UsuarioNaoAutorizadoException("O usuário já é o solucionador da demanda.");
+        if (UsuarioSolucionador is not null && UsuarioSolucionador.Id == ator.Id)
+            throw new UsuarioNaoAutorizadoException("O usuário já é o solucionador desta demanda.");
         if (DepartamentoSolucionador != ator.Departamento)
             throw new UsuarioNaoAutorizadoException("A captura de demandas é restrita aos usuários do departamento solucionador.");
 
         Situacao = Situacoes.Capturada;
-        AtualizarEventoRegistrado($"Demanda capturada por {ator.Nome}.");
+        AtualizarEventoRegistrado($"Demanda capturada por ({ator.Matricula}) {ator.Nome}.");
 
         UsuarioSolucionador = ator;
         Situacao = Situacoes.EmAtendimento;
@@ -127,7 +129,7 @@ public class Demanda
     public void Responder(Usuario ator, string mensagem)
     {
         if (Situacao != Situacoes.EmAtendimento)
-            throw new UsuarioNaoAutorizadoException("A demanda não está na situação 'Em Atendimento'.");
+            throw new UsuarioNaoAutorizadoException("Esta demanda não está na situação 'Em Atendimento'.");
         if (UsuarioSolucionador is null || UsuarioSolucionador.Id != ator.Id)
             throw new UsuarioNaoAutorizadoException("Apenas o solucionador da demanda pode respondê-la.");
 
@@ -143,7 +145,7 @@ public class Demanda
             Situacao = Situacoes.CanceladaPeloSolicitante;
         else if (UsuarioSolucionador is not null && UsuarioSolucionador.Id == ator.Id)
             Situacao = Situacoes.CanceladaPeloSolucionador;
-        else if (DepartamentoSolucionador == ator.Departamento && ator.Funcao == Funcoes.Gestor)
+        else if (DepartamentoSolucionador == ator.Departamento && ator.EhGestor == true)
             Situacao = Situacoes.CanceladaPeloGestor;
         else
             throw new UsuarioNaoAutorizadoException("O cancelamento de demandas é restrito ao solicitante da demanda, ao solucionador da demanda e aos gestores do departamento solucionador.");
@@ -154,8 +156,10 @@ public class Demanda
 
     public Demanda Reabrir(Usuario ator, Usuario? solucionador, string mensagem)
     {
+        if (Situacao == Situacoes.CanceladaPeloSolicitante)
+            throw new UsuarioNaoAutorizadoException("Esta demanda não pode ser reaberta.");
         if (Situacao != Situacoes.Respondida && Situacao != Situacoes.CanceladaPeloSolucionador && Situacao != Situacoes.CanceladaPeloGestor)
-            throw new UsuarioNaoAutorizadoException("A demanda não foi respondida ou cancelada.");
+            throw new UsuarioNaoAutorizadoException("Esta demanda ainda não foi respondida ou cancelada.");
         if (DepartamentoSolicitante != ator.Departamento)
             throw new UsuarioNaoAutorizadoException("A reabertura de demandas é restrita aos usuários do departamento solicitante.");
 

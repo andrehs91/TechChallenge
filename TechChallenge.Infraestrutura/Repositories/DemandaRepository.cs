@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TechChallenge.Dominio.Entities;
-using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Interfaces;
 using TechChallenge.Infraestrutura.Data;
 
@@ -52,7 +51,7 @@ public class DemandaRepository : IDemandaRepository
             .ToList();
     }
 
-    public IList<Demanda> BuscarPorDepartamentoSolicitante(Departamentos departamento)
+    public IList<Demanda> BuscarPorDepartamentoSolicitante(string departamento)
     {
         return _context.Demandas
             .Include(d => d.Atividade)
@@ -81,7 +80,7 @@ public class DemandaRepository : IDemandaRepository
             .ToList();
     }
 
-    public IList<Demanda> BuscarPorDepartamentoSolucionador(Departamentos departamento)
+    public IList<Demanda> BuscarPorDepartamentoSolucionador(string departamento)
     {
         return _context.Demandas
             .Include(d => d.Atividade)

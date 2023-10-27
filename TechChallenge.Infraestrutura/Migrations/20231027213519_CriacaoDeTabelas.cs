@@ -24,7 +24,7 @@ namespace TechChallenge.Infraestrutura.Migrations
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EstahAtiva = table.Column<bool>(type: "bit", nullable: false),
-                    DepartamentoSolucionador = table.Column<int>(type: "int", nullable: false),
+                    DepartamentoSolucionador = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoDeDistribuicao = table.Column<int>(type: "int", nullable: false),
                     Prioridade = table.Column<int>(type: "int", nullable: false),
                     PrazoEstimado = table.Column<int>(type: "int", nullable: false)
@@ -43,8 +43,8 @@ namespace TechChallenge.Infraestrutura.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Matricula = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Departamento = table.Column<int>(type: "int", nullable: false),
-                    Funcao = table.Column<int>(type: "int", nullable: false)
+                    Departamento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EhGestor = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,9 +64,9 @@ namespace TechChallenge.Infraestrutura.Migrations
                     MomentoDeFechamento = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Prazo = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Situacao = table.Column<int>(type: "int", nullable: false),
-                    DepartamentoSolicitante = table.Column<int>(type: "int", nullable: false),
+                    DepartamentoSolicitante = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UsuarioSolicitanteId = table.Column<int>(type: "int", nullable: false),
-                    DepartamentoSolucionador = table.Column<int>(type: "int", nullable: false),
+                    DepartamentoSolucionador = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UsuarioSolucionadorId = table.Column<int>(type: "int", nullable: true),
                     Detalhes = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },

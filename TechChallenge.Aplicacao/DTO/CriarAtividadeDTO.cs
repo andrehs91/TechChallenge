@@ -11,7 +11,7 @@ public class CriarAtividadeDTO
     [JsonConverter(typeof(JsonStringEnumConverter))] public Prioridades Prioridade { get; set; }
     public int PrazoEstimado { get; set; }
 
-    public AtividadeDTO ConverterParaAtividadeDTO(Departamentos departamentoSolucionador)
+    public AtividadeDTO ConverterParaAtividadeDTO(string departamentoSolucionador)
     {
         return new AtividadeDTO()
         {

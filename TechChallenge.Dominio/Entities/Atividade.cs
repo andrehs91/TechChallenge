@@ -8,7 +8,7 @@ public class Atividade
     public string Nome { get; set; }
     public string Descricao { get; set; }
     public bool EstahAtiva { get; set; }
-    public Departamentos DepartamentoSolucionador { get; set; }
+    public string DepartamentoSolucionador { get; set; }
     public TiposDeDistribuicao TipoDeDistribuicao { get; set; }
     public Prioridades Prioridade { get; set; }
     public int PrazoEstimado { get; set; }
@@ -21,7 +21,7 @@ public class Atividade
         string nome,
         string descricao,
         bool estahAtiva,
-        Departamentos departamentoSolucionador,
+        string departamentoSolucionador,
         TiposDeDistribuicao tipoDeDistribuicao,
         Prioridades prioridade,
         int prazoEstimado)

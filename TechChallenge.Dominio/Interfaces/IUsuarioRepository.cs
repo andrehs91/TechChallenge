@@ -1,5 +1,4 @@
 ﻿using TechChallenge.Dominio.Entities;
-using TechChallenge.Dominio.Enums;
 
 namespace TechChallenge.Dominio.Interfaces;
 
@@ -11,7 +10,7 @@ public interface IUsuarioRepository
     IList<Usuario> BuscarTodos();
     IList<Usuario> BuscarPorIds(IList<int> ids);
     IList<Usuario> BuscarPorMatriculas(IList<string> ids);
-    IList<Usuario> BuscarPorDepartamento(Departamentos departamento);
+    IList<Usuario> BuscarPorDepartamento(string departamento);
     void Editar(Usuario usuario);
     void EditarVarios(IList<Usuario> usuarios);
     void Apagar(int id);

@@ -14,10 +14,10 @@ public class DemandaDTO
     public DateTime? MomentoDeFechamento { get; set; }
     public DateTime Prazo { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))] public Situacoes Situacao { get; set; }
-    [JsonConverter(typeof(JsonStringEnumConverter))] public Departamentos DepartamentoSolicitante { get; set; }
+    public string DepartamentoSolicitante { get; set; }
     public string MatriculaUsuarioSolicitante { get; set; }
     public string NomeUsuarioSolicitante { get; set; }
-    [JsonConverter(typeof(JsonStringEnumConverter))] public Departamentos DepartamentoSolucionador { get; set; }
+    public string DepartamentoSolucionador { get; set; }
     public string? MatriculaUsuarioSolucionador { get; set; }
     public string? NomeUsuarioSolucionador { get; set; }
     public string Detalhes { get; set; }

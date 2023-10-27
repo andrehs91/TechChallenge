@@ -1,6 +1,5 @@
 ﻿using TechChallenge.Aplicacao.DTO;
 using TechChallenge.Dominio.Entities;
-using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Exceptions;
 using TechChallenge.Dominio.Interfaces;
 
@@ -19,7 +18,7 @@ public class AtividadeCommand
 
     private void VerificarSeUsuarioEstahAutorizado(Usuario usuario, Atividade atividade)
     {
-        if (usuario.Funcao != Funcoes.Gestor ||
+        if (usuario.EhGestor == false ||
             usuario.Departamento != atividade.DepartamentoSolucionador)
             throw new UsuarioNaoAutorizadoException("Usuário não autorizado.");
     }
@@ -98,8 +97,8 @@ public class AtividadeCommand
     {
         var atividade = _repositorioDeAtividades.BuscarPorIdComSolucionadores(id);
 
-        if (atividade is null) return new RespostaDTO(RespostaDTO.Tipos.Aviso, "Atividade não encontrada.");
-        if (atividade.DepartamentoSolucionador != usuario.Departamento) return new RespostaDTO(RespostaDTO.Tipos.Erro, "A atividade não é de responsabilidade do teu departamento.");
+        if (atividade is null) return new RespostaDTO(RespostaDTO.TiposDeResposta.Aviso, "Atividade não encontrada.");
+        if (atividade.DepartamentoSolucionador != usuario.Departamento) return new RespostaDTO(RespostaDTO.TiposDeResposta.Erro, "A atividade não é de responsabilidade do teu departamento.");
 
         var usuariosPromovidos = _repositorioDeUsuarios.BuscarPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremPromovidos);
         var usuariosDemovivos = _repositorioDeUsuarios.BuscarPorIds(idsDosUsuariosDTO.IdsDosUsuariosASeremDemovidos);
@@ -108,11 +107,11 @@ public class AtividadeCommand
         int quantidadeDeUsuarios = usuariosPromovidos.Count() + usuariosDemovivos.Count();
 
         if (quantidadeDeUsuarios == 0)
-            return new RespostaDTO(RespostaDTO.Tipos.Aviso, "Nenhum usuário foi encontrado.");
+            return new RespostaDTO(RespostaDTO.TiposDeResposta.Aviso, "Nenhum usuário foi encontrado.");
         if (quantidadeDeIds != quantidadeDeUsuarios)
-            return new RespostaDTO(RespostaDTO.Tipos.Aviso, "Um ou mais usuários não foram encontrados.");
+            return new RespostaDTO(RespostaDTO.TiposDeResposta.Aviso, "Um ou mais usuários não foram encontrados.");
         if (usuariosPromovidos.Concat(usuariosDemovivos).Where(u => u.Departamento != usuario.Departamento).Count() > 0)
-            return new RespostaDTO(RespostaDTO.Tipos.Erro, "Um ou mais usuários não fazem parte do teu departamento.");
+            return new RespostaDTO(RespostaDTO.TiposDeResposta.Erro, "Um ou mais usuários não fazem parte do teu departamento.");
 
         foreach (Usuario usuarioPromovido in usuariosPromovidos)
         {
@@ -126,6 +125,6 @@ public class AtividadeCommand
         }
 
         _repositorioDeAtividades.Editar(atividade);
-        return new RespostaDTO(RespostaDTO.Tipos.Sucesso, "Solucionador(es) definido(s) com sucesso.");
+        return new RespostaDTO(RespostaDTO.TiposDeResposta.Sucesso, "Solucionador(es) definido(s) com sucesso.");
     }
 }

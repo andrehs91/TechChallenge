@@ -19,13 +19,12 @@ public class TokenService : ITokenService
     {
         List<Claim> claims = new()
         {
-            new Claim(ClaimTypes.Name, usuario.Matricula),
-            new Claim(ClaimTypes.Role, usuario.Funcao.ToString()),
+            new Claim(ClaimTypes.Role, usuario.EhGestor ? "Gestor" : "Usuario"),
             new Claim("Id", usuario.Id.ToString()),
             new Claim("Matricula", usuario.Matricula),
             new Claim("Nome", usuario.Nome),
             new Claim("Departamento", usuario.Departamento.ToString()),
-            new Claim("Funcao", usuario.Funcao.ToString())
+            new Claim("EhGestor", usuario.EhGestor ? "Sim" : "Não")
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

@@ -31,7 +31,7 @@ public class UsuarioController : BaseController
     /// a um serviço de SSO.
     /// </remarks>
     [HttpPost("autenticar")]
-    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UsuarioAutenticadoDTO), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
     public IActionResult Autenticar([FromBody] AutenticarDTO autenticarDTO)
@@ -40,13 +40,9 @@ public class UsuarioController : BaseController
 
         var usuario = _comandos.Autenticar(autenticarDTO);
 
-        if (usuario is null) return NotFound(new RespostaDTO(RespostaDTO.Tipos.Aviso, "Matrícula e/ou senha inválidos."));
+        if (usuario is null) return NotFound(new RespostaDTO(RespostaDTO.TiposDeResposta.Aviso, "Matrícula e/ou senha inválidos."));
 
-        return Ok(new
-        {
-            Usuario = usuario,
-            Token = _tokenService.GenerateToken(usuario)
-        });
+        return Ok(new UsuarioAutenticadoDTO(new UsuarioDTO(usuario), _tokenService.GenerateToken(usuario)));
     }
 
     /// <summary>
@@ -83,8 +79,8 @@ public class UsuarioController : BaseController
     public ActionResult<RespostaDTO> DefinirGestoresDoDepartamento([FromBody] IdsDosUsuariosDTO idsDosUsuariosDTO)
     {
         RespostaDTO resposta = _comandos.DefinirGestoresDoDepartamento(ObterUsuarioAutenticado(), idsDosUsuariosDTO);
-        if (resposta.Tipo == RespostaDTO.Tipos.Erro) return BadRequest(resposta);
-        if (resposta.Tipo == RespostaDTO.Tipos.Aviso) return NotFound(resposta);
+        if (resposta.Tipo == RespostaDTO.TiposDeResposta.Erro) return BadRequest(resposta);
+        if (resposta.Tipo == RespostaDTO.TiposDeResposta.Aviso) return NotFound(resposta);
         return Ok(resposta);
     }
 }

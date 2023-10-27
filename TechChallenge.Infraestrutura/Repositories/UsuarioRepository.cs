@@ -1,5 +1,4 @@
 ﻿using TechChallenge.Dominio.Entities;
-using TechChallenge.Dominio.Enums;
 using TechChallenge.Dominio.Interfaces;
 using TechChallenge.Infraestrutura.Data;
 
@@ -12,45 +11,6 @@ public class UsuarioRepository : IUsuarioRepository
     public UsuarioRepository(ApplicationDbContext context)
     {
         _context = context;
-
-        if (!_context.Usuarios.Any())
-        {
-            Criar(new Usuario
-            {
-                Matricula = "c1111",
-                Nome = "Pedro",
-                Departamento = Departamentos.Financeiro,
-                Funcao = Funcoes.Gestor
-            });
-            Criar(new Usuario
-            {
-                Matricula = "c1112",
-                Nome = "Tiago",
-                Departamento = Departamentos.Financeiro,
-                Funcao = Funcoes.Solicitante
-            });
-            Criar(new Usuario
-            {
-                Matricula = "c1113",
-                Nome = "André",
-                Departamento = Departamentos.Financeiro,
-                Funcao = Funcoes.Solicitante
-            });
-            Criar(new Usuario
-            {
-                Matricula = "c2222",
-                Nome = "Paulo",
-                Departamento = Departamentos.SuporteTecnologico,
-                Funcao = Funcoes.Solucionador
-            });
-            Criar(new Usuario
-            {
-                Matricula = "c3333",
-                Nome = "João",
-                Departamento = Departamentos.Desenvolvimento,
-                Funcao = Funcoes.Solicitante
-            });
-        }
     }
 
     public void Criar(Usuario usuario)
@@ -86,7 +46,7 @@ public class UsuarioRepository : IUsuarioRepository
         return _context.Usuarios.Where(u => matriculas.Contains(u.Matricula.ToLower())).ToList();
     }
 
-    public IList<Usuario> BuscarPorDepartamento(Departamentos departamento)
+    public IList<Usuario> BuscarPorDepartamento(string departamento)
     {
         return _context.Usuarios.Where(u => u.Departamento == departamento).ToList();
     }

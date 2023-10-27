@@ -63,6 +63,7 @@ public class DemandaCommand
 
     public void CapturarDemanda(Usuario ator, int id)
     {
+        ator = _repositorioDeUsuarios.BuscarPorId(ator.Id) ?? throw new EntidadeNaoEncontradaException("Usuário não encontrado.");
         var demanda = ConsultarDemanda(id);
         demanda.Capturar(ator);
         _repositorioDeDemandas.Editar(demanda);
