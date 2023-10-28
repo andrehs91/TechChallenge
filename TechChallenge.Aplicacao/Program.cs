@@ -22,7 +22,9 @@ builder.Services.AddScoped<ISolucionadorPolicy, SolucionadorPolicy>();
 builder.Services.AddScoped<UsuarioCommand>();
 builder.Services.AddScoped<AtividadeCommand>();
 builder.Services.AddScoped<DemandaCommand>();
-builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+    .ConfigureApiBehaviorOptions((options => options.SuppressModelStateInvalidFilter = true));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(o =>
 {

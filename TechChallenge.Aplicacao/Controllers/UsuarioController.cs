@@ -78,6 +78,8 @@ public class UsuarioController : BaseController
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
     public ActionResult<RespostaDTO> DefinirGestoresDoDepartamento([FromBody] IdsDosUsuariosDTO idsDosUsuariosDTO)
     {
+        if (!ModelState.IsValid) throw new DadosInvalidosException(ObterErrosDeValidacao());
+
         RespostaDTO resposta = _comandos.DefinirGestoresDoDepartamento(ObterUsuarioAutenticado(), idsDosUsuariosDTO);
         if (resposta.Tipo == RespostaDTO.TiposDeResposta.Erro) return BadRequest(resposta);
         if (resposta.Tipo == RespostaDTO.TiposDeResposta.Aviso) return NotFound(resposta);
