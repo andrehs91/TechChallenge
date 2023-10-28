@@ -25,10 +25,6 @@ public class UsuarioController : BaseController
     /// </summary>
     /// <remarks>
     /// Para utilizar o sistema o usuário deverá estar autenticado.
-    /// Considerando o escopo do projeto (um sistema que atenda diferentes departamentos dentro de uma organização),
-    /// não faz sentido a implementação completa de um sistema de autenticação, visto que a gestão distribuída de 
-    /// credenciais de usuários gera uma vulnerabilidade crítica. No cenário ideal, esta aplicação deverá ser conectada
-    /// a um serviço de SSO.
     /// </remarks>
     [HttpPost("autenticar")]
     [ProducesResponseType(typeof(UsuarioAutenticadoDTO), StatusCodes.Status200OK)]
