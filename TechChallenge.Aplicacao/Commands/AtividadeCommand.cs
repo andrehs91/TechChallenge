@@ -58,7 +58,7 @@ public class AtividadeCommand
 
     public Atividade? ConsultarAtividade(int id)
     {
-        return _repositorioDeAtividades.BuscarPorId(id);
+        return _repositorioDeAtividades.BuscarPorIdComSolucionadores(id);
     }
 
     public bool EditarAtividade(Usuario usuario, AtividadeDTO atividadeDTO)

@@ -20,23 +20,6 @@ public class DemandaController : BaseController
     }
 
     /// <summary>
-    /// Comando: Consultar Demanda
-    /// </summary>
-    /// <remarks>
-    /// Exibe os dados de uma demanda específica.
-    /// </remarks>
-    /// <param name="id">Identificador da demanda</param>
-    [HttpGet("{id}")]
-    [Authorize]
-    [ProducesResponseType(typeof(DemandaDTO), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
-    public ActionResult<DemandaDTO> BuscarDemanda(int id)
-    {
-        return Ok(new DemandaDTO(_comandos.ConsultarDemanda(id)));
-    }
-
-    /// <summary>
     /// Modelo de Leitura: Lista de Demandas do Solicitante
     /// </summary>
     /// <remarks>
@@ -94,6 +77,23 @@ public class DemandaController : BaseController
     public ActionResult<IList<DemandaDTO>> BuscarDemandasDoDepartamentoSolucionador()
     {
         return Ok(_comandos.ListarDemandasDoDepartamentoSolucionador(ObterUsuarioAutenticado()).Select(demanda => new DemandaDTO(demanda)));
+    }
+
+    /// <summary>
+    /// Comando: Consultar Demanda
+    /// </summary>
+    /// <remarks>
+    /// Exibe os dados de uma demanda específica.
+    /// </remarks>
+    /// <param name="id">Identificador da demanda</param>
+    [HttpGet("{id}")]
+    [Authorize]
+    [ProducesResponseType(typeof(DemandaDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
+    public ActionResult<DemandaDTO> BuscarDemanda(int id)
+    {
+        return Ok(new DemandaDTO(_comandos.ConsultarDemanda(id)));
     }
 
     /// <summary>

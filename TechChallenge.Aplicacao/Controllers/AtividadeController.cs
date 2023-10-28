@@ -64,13 +64,13 @@ public class AtividadeController : BaseController
     /// <param name="id">Identificador da atividade</param>
     [HttpGet("{id}")]
     [Authorize]
-    [ProducesResponseType(typeof(AtividadeDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AtividadeComSolucionadoresDTO), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(RespostaDTO), StatusCodes.Status404NotFound)]
     public ActionResult<AtividadeDTO> ConsultarAtividade(int id)
     {
         return _comandos.ConsultarAtividade(id) is Atividade atividade
-            ? Ok(new AtividadeDTO(atividade))
+            ? Ok(new AtividadeComSolucionadoresDTO(atividade))
             : NotFound(new RespostaDTO(RespostaDTO.TiposDeResposta.Aviso, "Atividade não encontrada."));
     }
 
