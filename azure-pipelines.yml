@@ -24,7 +24,7 @@ steps:
 
 - task: FileTransform@1
   inputs:
-    folderPath: 'TechChallenge/TechChallenge.Aplicacao/'
+    folderPath: 'TechChallenge/**/'
     fileType: 'json'
     targetFiles: 'appsettings.json'
 
