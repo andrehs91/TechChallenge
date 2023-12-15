@@ -10,11 +10,23 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+- group: TechChallenge
+- name: solution
+  value: '**/*.sln'
+- name: buildPlatform
+  value: 'Any CPU'
+- name: buildConfiguration
+  value: 'Release'
+- name: ConnectionStrings.SQLServer
+  value: '$(SQLServer)'
 
 steps:
+- task: PowerShell@2
+  inputs:
+    targetType: inline
+    script: |
+      echo "ConnectionStrings.SQLServer: $(SQLServer)"
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
