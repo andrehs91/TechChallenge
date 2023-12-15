@@ -21,11 +21,12 @@ variables:
   value: '$(SQLServer)'
 
 steps:
-- task: PowerShell@2
+
+- task: FileTransform@1
   inputs:
-    targetType: inline
-    script: |
-      echo "ConnectionStrings.SQLServer: $(SQLServer)"
+    folderPath: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    fileType: 'json'
+    targetFiles: 'appsettings.json'
 
 - task: NuGetToolInstaller@1
 
