@@ -46,3 +46,11 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Assinatura do Visual Studio Enterprise(000e36a5-1c0b-46d1-b901-554b373cdaec)'
+    appType: 'webApp'
+    appName: 'fiapcd'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    deploymentMethod: 'auto'
