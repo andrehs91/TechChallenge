@@ -52,5 +52,6 @@ steps:
     azureSubscription: 'Assinatura do Visual Studio Enterprise(000e36a5-1c0b-46d1-b901-554b373cdaec)'
     appType: 'webApp'
     appName: 'fiapcd'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    # package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    package: '$(Build.ArtifactStagingDirectory)'
     deploymentMethod: 'auto'
